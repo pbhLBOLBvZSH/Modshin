@@ -139,20 +139,18 @@ export const AppRouter = () => {
                                         path={AppRoute.LIBRARY_GENRES_SONGS}
                                     />
                                 </Route>
-                            <Route path={AppRoute.JUKEBOX}>
-                                <Route
-                                    index
-                                    element={<JukeboxRoute />}
-                                    errorElement={<RouteErrorBoundary />}
-                                />
-                            </Route>
-                            <Route path={AppRoute.VISUALISER}>
-                                <Route
-                                    index
-                                    element={<VisualiserRoute />}
-                                    errorElement={<RouteErrorBoundary />}
-                                />
-                            </Route>
+                                <Route path={AppRoute.JUKEBOX}>
+                                    <Route
+                                        element={<JukeboxRoute />}
+                                        errorElement={<RouteErrorBoundary />}
+                                    />
+                                </Route>
+                                <Route path={AppRoute.VISUALISER}>
+                                    <Route
+                                        element={<VisualiserRoute />}
+                                        errorElement={<RouteErrorBoundary />}
+                                    />
+                                </Route>
                                 <Route
                                     element={<AlbumListRoute />}
                                     errorElement={<RouteErrorBoundary />}
