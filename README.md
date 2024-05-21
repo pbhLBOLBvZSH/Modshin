@@ -7,6 +7,7 @@
 - Patches (hopefully) freezing
 - Dedicated modshin settings tab
 - Expanded center controls with modshin features
+- Audio visualiser ported over from https://github.com/kgarner7/feishin/tree/visualizer to work with the latest feishin version
 
 <br><br>
 
