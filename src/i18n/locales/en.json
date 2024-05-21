@@ -23,6 +23,8 @@
         }
     },
     "common": {
+        "visualiser": "visualiser",
+        "jukebox": "jukebox",
         "action_one": "action",
         "action_other": "actions",
         "add": "add",
@@ -391,8 +393,8 @@
             "folders": "$t(entity.folder_other)",
             "genres": "$t(entity.genre_other)",
             "home": "$t(common.home)",
-            "jukebox": "jukebox",
-            "visualiser": "visualiser",
+            "jukebox": "$t(common.jukebox)",
+            "visualiser": "$t(common.visualiser)",
             "nowPlaying": "now playing",
             "playlists": "$t(entity.playlist_other)",
             "search": "$t(common.search)",

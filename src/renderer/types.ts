@@ -232,3 +232,9 @@ export enum AuthState {
     LOADING = 'loading',
     VALID = 'valid',
 }
+
+export type WebAudio = {
+    analyzer: AnalyserNode;
+    context: AudioContext;
+    gain: GainNode;
+};

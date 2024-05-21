@@ -6,6 +6,7 @@ import { SettingSearchContext } from '/@/renderer/features/settings/context/sear
 import { useState } from 'react';
 
 const SettingsRoute = () => {
+
     const [search, setSearch] = useState('');
 
     return (

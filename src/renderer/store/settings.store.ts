@@ -36,7 +36,7 @@ export type SidebarItemType = {
 
 export const sidebarItems = [
     {
-        disabled: true,
+        disabled: false,
         id: 'Now Playing',
         label: i18n.t('page.sidebar.nowPlaying'),
         route: AppRoute.NOW_PLAYING,
@@ -91,13 +91,13 @@ export const sidebarItems = [
         route: AppRoute.SETTINGS,
     },
     {
-        disabled: true,
+        disabled: false,
         id: 'Jukebox',
         label: i18n.t('page.sidebar.jukebox'),
         route: AppRoute.JUKEBOX,
     },
     {
-        disabled: true,
+        disabled: false,
         id: 'Visualiser',
         label: i18n.t('page.sidebar.visualiser'),
         route: AppRoute.VISUALISER,

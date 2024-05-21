@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-model';
 import { ModuleRegistry } from '@ag-grid-community/core';
 import { InfiniteRowModelModule } from '@ag-grid-community/infinite-row-model';
@@ -21,11 +21,12 @@ import { useHandlePlayQueueAdd } from '/@/renderer/features/player/hooks/use-han
 import { PlayQueueHandlerContext } from '/@/renderer/features/player';
 import { getMpvProperties } from '/@/renderer/features/settings/components/playback/mpv-settings';
 import { PlayerState, usePlayerStore, useQueueControls } from '/@/renderer/store';
-import { FontType, PlaybackType, PlayerStatus } from '/@/renderer/types';
+import { FontType, PlaybackType, PlayerStatus, WebAudio } from '/@/renderer/types';
 import '@ag-grid-community/styles/ag-grid.css';
 import { useDiscordRpc } from '/@/renderer/features/discord-rpc/use-discord-rpc';
 import i18n from '/@/i18n/i18n';
 import { useServerVersion } from '/@/renderer/hooks/use-server-version';
+import { WebAudioContext } from '/@/renderer/features/player/context/webaudio-context';
 
 ModuleRegistry.registerModules([ClientSideRowModelModule, InfiniteRowModelModule]);
 
@@ -50,6 +51,8 @@ export const App = () => {
     useDiscordRpc();
     useServerVersion();
     usePlayerStore.getState().actions.modsInit();
+
+    const [webAudio, setWebAudio] = useState<WebAudio>();
 
     useEffect(() => {
         if (type === FontType.SYSTEM && system) {
@@ -94,6 +97,10 @@ export const App = () => {
     const providerValue = useMemo(() => {
         return { handlePlayQueueAdd };
     }, [handlePlayQueueAdd]);
+
+    const webAudioProvider = useMemo(() => {
+        return { setWebAudio, webAudio };
+    }, [webAudio]);
 
     // Start the mpv instance on startup
     useEffect(() => {
@@ -247,7 +254,9 @@ export const App = () => {
         >
             <PlayQueueHandlerContext.Provider value={providerValue}>
                 <ContextMenuProvider>
-                    <AppRouter />
+                    <WebAudioContext.Provider value={webAudioProvider}>
+                        <AppRouter />
+                    </WebAudioContext.Provider>
                 </ContextMenuProvider>
             </PlayQueueHandlerContext.Provider>
             <IsUpdatedDialog />
