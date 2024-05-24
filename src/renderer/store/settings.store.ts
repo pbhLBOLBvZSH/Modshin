@@ -24,6 +24,7 @@ import { randomString } from '/@/renderer/utils';
 import i18n from '/@/i18n/i18n';
 import { usePlayerStore } from '/@/renderer/store/player.store';
 import { mergeOverridingColumns } from '/@/renderer/store/utils';
+import { VisualiserType, VisualiserColorMode, VisualiserFreqScale, VisualiserMode } from '/@/renderer/types';
 
 const utils = isElectron() ? window.electron.utils : null;
 
@@ -256,6 +257,10 @@ export interface SettingsState {
         historyLength: number;
         lyricAnimations: boolean;
         steelseriesPort: number;
+        visualiser: VisualiserType[];
+        visualiserColorMode: VisualiserColorMode[];
+        visualiserFreqScale: VisualiserFreqScale[];
+        visualiserMode: VisualiserMode[];
     };
     playback: {
         audioDeviceId?: string | null;
@@ -414,6 +419,10 @@ const initialState: SettingsState = {
         historyLength: 10000,
         lyricAnimations: true,
         steelseriesPort: 0,
+        visualiser: [VisualiserType.BAR_GRAPH],
+        visualiserColorMode: [VisualiserColorMode.GRADIENT],
+        visualiserFreqScale: [VisualiserFreqScale.LINEAR],
+        visualiserMode: [VisualiserMode.FIVE],
     },
     playback: {
         audioDeviceId: undefined,

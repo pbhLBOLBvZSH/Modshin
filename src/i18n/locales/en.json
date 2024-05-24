@@ -632,7 +632,15 @@
         "lyricAnimations": "Lyric animations",
         "lyricAnimations_description": "Enables custom lyric animations",
         "steelseries": "Steelseries GameSense Port",
-        "steelseries_description": "Enables Steelseries GameSense integration. 0 for disabled. (%PROGRAMDATA%/SteelSeries/SteelSeries Engine 3/coreProps.json) ($t(common.restartRequired))"
+        "steelseries_description": "Enables Steelseries GameSense integration. 0 for disabled. (%PROGRAMDATA%/SteelSeries/SteelSeries Engine 3/coreProps.json) ($t(common.restartRequired))",
+        "visualiser": "Visualiser Style",
+        "visualiser_description": "The style of the visualiser",
+        "visualiserColorMode": "Visualiser color mode",
+        "visualiserColorMode_description": "The color mode of the visualiser",
+        "visualiserFreqScale": "Visualiser frequency scale",
+        "visualiserFreqScale_description": "The frequency scale of the visualiser",
+        "visualiserMode": "Visualiser mode",
+        "visualiserMode_description": "The mode of the visualiser"
     },
     "table": {
         "column": {

@@ -5,6 +5,9 @@ import {
 } from '/@/renderer/features/settings/components/settings-section';
 import { useTranslation } from 'react-i18next';
 import { Select, Switch, toast, NumberInput } from '/@/renderer/components';
+import { VisualiserType, VisualiserColorMode, VisualiserFreqScale, VisualiserMode } from '/@/renderer/types';
+import { useState } from 'react';
+
 
 export const ModSettings = () => {
     // Define your settings here
@@ -96,7 +99,90 @@ export const ModSettings = () => {
             }),
             title: t('setting.steelseries', { postProcess: 'sentenceCase' }),
         },
-        // Add more options as needed
+        {
+            control: (
+                <Select
+                    defaultValue={settings.visualiser}
+                    data={Object.values(VisualiserType)}
+                    onChange={(e: VisualiserType[]) => {
+                        setSettings({
+                            modshin: {
+                                ...settings,
+                                visualiser: e,
+                            },
+                        });
+                    }}
+                />
+            ),
+            description: t('setting.visualiser', {
+                context: 'description',
+                postProcess: 'sentenceCase',
+            }),
+            title: t('setting.visualiser', { postProcess: 'sentenceCase' }),
+        },
+        {
+            control: (
+                <Select
+                    defaultValue={settings.visualiserColorMode}
+                    data={Object.values(VisualiserColorMode)}
+                    onChange={(e: VisualiserColorMode[]) => {
+                        setSettings({
+                            modshin: {
+                                ...settings,
+                                visualiserColorMode: e,
+                            },
+                        });
+                    }}
+                />
+            ),
+            description: t('setting.visualiserColorMode', {
+                context: 'description',
+                postProcess: 'sentenceCase',
+            }),
+            title: t('setting.visualiserColorMode', { postProcess: 'sentenceCase' }),
+        },
+        {
+            control: (
+                <Select
+                    defaultValue={settings.visualiserFreqScale}
+                    data={Object.values(VisualiserFreqScale)}
+                    onChange={(e: VisualiserFreqScale[]) => {
+                        setSettings({
+                            modshin: {
+                                ...settings,
+                                visualiserFreqScale: e,
+                            },
+                        });
+                    }}
+                />
+            ),
+            description: t('setting.visualiserFreqScale', {
+                context: 'description',
+                postProcess: 'sentenceCase',
+            }),
+            title: t('setting.visualiserFreqScale', { postProcess: 'sentenceCase' }),
+        },
+        {
+            control: (
+                <Select
+                    defaultValue={settings.visualiserMode}
+                    data={Object.values(VisualiserMode)}
+                    onChange={(e: VisualiserMode[]) => {
+                        setSettings({
+                            modshin: {
+                                ...settings,
+                                visualiserMode: e,
+                            },
+                        });
+                    }}
+                />
+            ),
+            description: t('setting.visualiserMode', {
+                context: 'description',
+                postProcess: 'sentenceCase',
+            }),
+            title: t('setting.visualiserMode', { postProcess: 'sentenceCase' }),
+        }
     ];
 
     return <SettingsSection options={modshinOptions} />;

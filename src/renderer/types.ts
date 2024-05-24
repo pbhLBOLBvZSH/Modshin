@@ -238,3 +238,37 @@ export type WebAudio = {
     context: AudioContext;
     gain: GainNode;
 };
+
+export enum VisualiserType {
+    BAR_GRAPH = 'Classic Bar Graph',
+    BAR_GRAPH_ORANGERED = 'OrangeRed Bar Graph',
+    BAR_GRAPH_PRISM = 'Prism Bar Graph',
+    BAR_GRAPH_RAINBOW = 'Rainbow Bar Graph',
+    BAR_GRAPH_STEELBLUE = 'Steelblue Bar Graph',
+}
+
+export enum VisualiserColorMode {
+    GRADIENT = 'Gradient',
+    BAR_INDEX = 'Bar Index',
+    BAR_LEVEL = 'Bar Level',
+}
+
+export enum VisualiserFreqScale {
+    BARK = 'Bark scale',
+    LINEAR = 'Linear scale',
+    LOG = 'Logarithmic scale',
+    MEL = 'Mel scale',
+}
+
+export enum VisualiserMode {
+    ZERO = 'Discrete frequencies',
+    ONE = '1/24th octave / 240 bands',
+    TWO = '1/12th octave / 120 bands',
+    THREE = '1/8th octave / 80 bands',
+    FOUR = '1/6th octave / 60 bands',
+    FIVE = '1/4th octave / 40 bands',
+    SIX = '1/3rd octave / 30 bands',
+    SEVEN = 'Half octave / 20 bands',
+    EIGHT = 'Full octave / 10 bands',
+    TEN = 'Line / Area graph',
+}
