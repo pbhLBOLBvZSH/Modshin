@@ -7,11 +7,11 @@
 - Patches (hopefully) freezing
 - Dedicated modshin settings tab
 - Expanded center controls with modshin features
-- Audio visualiser ported over from https://github.com/kgarner7/feishin/tree/visualizer to work with the latest feishin version
+- Audio visualiser ported over from https://github.com/kgarner7/feishin/tree/visualizer to work with the latest feishin version NOW WITH CUSTOMISATIONS
 
 <br><br>
-
-<img src="https://raw.githubusercontent.com/pbhLBOLBvZSH/Modshin/development/imgs/modshin1.png" width="90%"/><img src="https://raw.githubusercontent.com/pbhLBOLBvZSH/Modshin/development/imgs/modshin2.png" width="90%"/>
+<img src="https://raw.githubusercontent.com/pbhLBOLBvZSH/Modshin/development/imgs/modshin3.png" width="90%"/>
+<img src="https://raw.githubusercontent.com/pbhLBOLBvZSH/Modshin/development/imgs/modshin4.png" width="90%"/>
 
 <br><br><br>
 <img src="assets/icons/icon.png" alt="logo" title="feishin" align="right" height="60px" />
