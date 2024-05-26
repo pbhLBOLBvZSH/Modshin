@@ -194,6 +194,7 @@ const normalizeSong = (
         updatedAt: item.DateCreated,
         userFavorite: (item.UserData && item.UserData.IsFavorite) || false,
         userRating: null,
+        isAuto: false,
     };
 };
 

@@ -223,6 +223,7 @@ export type Song = {
     updatedAt: string;
     userFavorite: boolean;
     userRating: number | null;
+    isAuto: boolean;
 };
 
 export type AlbumArtist = {

@@ -272,3 +272,9 @@ export enum VisualiserMode {
     EIGHT = 'Full octave / 10 bands',
     TEN = 'Line / Area graph',
 }
+
+export enum AutoPlayQueueState {
+    IDLE, // We reached the limit to queue,
+             // its your responsibility to start another background process
+    FETCHING // There is a background process currently filling it.
+}

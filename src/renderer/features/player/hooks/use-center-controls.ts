@@ -35,7 +35,6 @@ export const useCenterControls = (args: { playersRef: any }) => {
         setShuffle,
         setRepeat,
         play,
-        playSimilar,
         pause,
         previous,
         next,
@@ -330,11 +329,6 @@ export const useCenterControls = (args: { playersRef: any }) => {
         const handleRepeatNone = {
             local: () => {
                 if (isLastTrack) {
-                    if (playSimilar()) {
-                        mpvPlayer!.pause();
-                        pause();
-                        return;
-                    }
                     const playerData = setCurrentIndex(0);
                     mprisUpdateSong({ song: playerData.current.song, status: PlayerStatus.PAUSED });
                     mpvPlayer!.setQueue(playerData, true);
@@ -347,10 +341,6 @@ export const useCenterControls = (args: { playersRef: any }) => {
             },
             web: () => {
                 if (isLastTrack) {
-                    if (playSimilar()) {
-                        pause();
-                        return;
-                    }
                     const playerData = setCurrentIndex(0);
                     mprisUpdateSong({
                         song: playerData.current.song,

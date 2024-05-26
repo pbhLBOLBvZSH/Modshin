@@ -10,7 +10,7 @@ import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { shallow } from 'zustand/shallow';
 import { QueueSong } from '/@/renderer/api/types';
-import { PlayerStatus, PlayerRepeat, PlayerShuffle, Play } from '/@/renderer/types';
+import { PlayerStatus, PlayerRepeat, PlayerShuffle, Play, AutoPlayQueueState } from '/@/renderer/types';
 import { getMostSimilarSong } from '/@/renderer/features/similar-songs/queries/similar-song-queries';
 import { joinSyncPlay } from '/@/renderer/features/sync-play/queries/sync-play-queries';
 import { modshinSettings } from '/@/renderer/store';
@@ -20,9 +20,10 @@ export interface PlayerState {
         didModInit: boolean;
         history: Array<QueueSong>;
         historyIndex: number;
-        historyLimit: number;
+        autoPlayQueueSize: number;
+        autoPlayQueueState: AutoPlayQueueState;
         index: number;
-        isSimilar: boolean;
+        inPlaylist: boolean;
         isSyncPlay: boolean;
         isSyncPlayHost: boolean;
         nextIndex: number;
@@ -92,7 +93,6 @@ export interface PlayerSlice extends PlayerState {
         onSongPlay: (song: QueueSong) => void;
         pause: () => void;
         play: () => void;
-        playSimilar: () => boolean;
         player1: () => QueueSong | undefined;
         player2: () => QueueSong | undefined;
         previous: () => PlayerData;
@@ -243,11 +243,14 @@ export const usePlayerStore = create<PlayerSlice>()(
                                 repeat === PlayerRepeat.NONE &&
                                 !modshinSettings().autoPlay
                             ) {
+                                console.log("We've reached the end, theres no repeat, theres no autoplay.");
                                 set((state) => {
                                     state.current.status = PlayerStatus.PAUSED;
                                     state.current.time = 0;
                                     state.current.song = currentSong;
+                                    state.current.inPlaylist = false;
                                 });
+                                get().actions.pause();
                                 return get().actions.getPlayerData();
                             }
 
@@ -297,13 +300,7 @@ export const usePlayerStore = create<PlayerSlice>()(
                                     state.current.player = state.current.player === 1 ? 2 : 1;
                                     state.current.song = get().queue.default[nextIndex];
                                     state.queue.previousNode = get().current.song;
-                                });
-                            }
-
-                            if (isLastTrack && repeat === PlayerRepeat.NONE) {
-                                if (!get().actions.playSimilar()) {
-                                    get().actions.pause();
-                                }
+                               });
                             }
 
                             return get().actions.getPlayerData();
@@ -323,7 +320,6 @@ export const usePlayerStore = create<PlayerSlice>()(
                                 state.current.history.pop();
                                 state.current.historyIndex -= 1;
                                 state.current.index = 0;
-                                state.current.isSimilar = true;
                                 state.current.song = song;
                                 state.queue.previousNode = song2;
                                 state.current.time = 0;
@@ -333,7 +329,7 @@ export const usePlayerStore = create<PlayerSlice>()(
                             });
                         },
                         checkIsFirstTrack: () => {
-                            if (get().current.isSimilar) return false;
+                            if (!get().current.inPlaylist) return false;
                             const currentIndex =
                                 get().shuffle === PlayerShuffle.TRACK
                                     ? get().current.shuffledIndex
@@ -360,6 +356,7 @@ export const usePlayerStore = create<PlayerSlice>()(
                                 state.queue.sorted = [];
                                 state.current.index = 0;
                                 state.current.shuffledIndex = 0;
+                                state.current.autoPlayQueueSize = 0;
                                 state.current.player = 1;
                                 state.current.song = undefined;
                             });
@@ -545,7 +542,6 @@ export const usePlayerStore = create<PlayerSlice>()(
                             console.log('historyLimit', historyLimit);
                             set((state) => {
                                 state.current.didModInit = true;
-                                state.current.historyLimit = historyLimit;
                             });
 
                             (async () => {
@@ -801,23 +797,27 @@ export const usePlayerStore = create<PlayerSlice>()(
                                     repeat === PlayerRepeat.NONE &&
                                     get().shuffle !== PlayerShuffle.TRACK
                                 ) {
-                                    get().actions.playSimilar();
+                                    set((state) => {
+                                        state.current.inPlaylist = false;
+                                    })
                                 }
 
                                 set((state) => {
                                     state.current.time = 0;
                                     state.current.index = nextIndex;
                                     state.current.player = 1;
-                                    state.current.song = get().queue.default[nextIndex];
                                     state.queue.previousNode = get().current.song;
+                                    state.current.song = get().queue.default[nextIndex];
                                 });
                             }
 
                             return get().actions.getPlayerData();
                         },
                         onSongPlay: (song: QueueSong) => {
+
                             // Updating this history
-                            let { history, historyLimit, historyIndex } = get().current;
+                            let { history, historyIndex } = get().current;
+                            let historyLimit = modshinSettings().historyLength;
                             history = [...history];
                             const songIndex = history.indexOf(song);
                             if (historyIndex < history.length) {
@@ -844,6 +844,60 @@ export const usePlayerStore = create<PlayerSlice>()(
                                     state.current.history = newHistory;
                                     state.current.historyIndex += isLimited ? 0 : 1;
                                 });
+                            }
+
+                            if (modshinSettings().autoPlay) {
+
+                                set((state) => {
+                                    if (get().queue.previousNode?.isAuto) state.current.autoPlayQueueSize -= 1
+                                });
+
+                                (async () => {
+                                    let currentSong;
+                                    let queue = get().queue.default;
+                                    let limit = modshinSettings().autoPlayQueueLimit;
+                                    let curr = get().current.autoPlayQueueSize;
+                                    let state = get().current.autoPlayQueueState;
+
+                                    console.log(`Autoplay enabled. Fetching ${limit-curr} new songs...`, curr, limit);
+                                    if ((currentSong = queue[queue.length - 1]) && curr < limit && state == AutoPlayQueueState.IDLE) {
+                                        set((state) => { // Prevents multiple instances of this
+                                            state.current.autoPlayQueueState = AutoPlayQueueState.FETCHING;
+                                        })
+
+                                        do {
+
+                                            await new Promise(resolve => setTimeout(resolve, 1000));
+                                            console.log(currentSong);
+                                            const nextSongs = await getMostSimilarSong(
+                                                currentSong,
+                                                [...get().current.history, ...get().queue.default],
+                                                limit - curr
+                                            );
+                                            if (!nextSongs || nextSongs.length === 0) continue; // idk
+                                            curr += nextSongs.length;
+                                            console.log(`Fetched the following songs (${curr}/${limit}): `, nextSongs);
+
+                                            // Add all new songs to the queue
+                                            set((state) => {
+                                                for (let song of nextSongs) {
+                                                    console.log(`Adding ${song.name} to queue...`);
+                                                    state.queue.default.push(song);
+                                                }
+                                            });
+
+                                            // Update currentSong to the last song in nextSongs
+                                            currentSong = nextSongs[nextSongs.length - 1];
+                                        } while (curr < limit);
+
+                                        set((state) => {
+                                            state.current.autoPlayQueueState = AutoPlayQueueState.IDLE;
+                                            state.current.autoPlayQueueSize = curr;
+                                        })
+                                    }
+                                })();
+                            } else {
+                                console.log("No autoplay... :(")
                             }
 
                             // Ensure the song actually starts playing
@@ -878,47 +932,6 @@ export const usePlayerStore = create<PlayerSlice>()(
                                 state.current.status = PlayerStatus.PLAYING;
                             });
                         },
-                        playSimilar: () => {
-                            const currentSong = get().current.song;
-                            console.log(`Last song: ${currentSong?.name}`);
-                            if (currentSong) get().actions.onSongPlay(currentSong);
-                            if (currentSong) {
-                                if (get().current.history.length > get().current.historyIndex) {
-                                    set((state) => {
-                                        state.current.historyIndex += 1;
-                                    });
-                                    return true;
-                                }
-
-                                (async () => {
-                                    const nextSong = await getMostSimilarSong(
-                                        currentSong,
-                                        get().current.history,
-                                    );
-                                    if (!nextSong) {
-                                        set((state) => {
-                                            state.current.isSimilar = false;
-                                        });
-                                        return false;
-                                    }
-                                    console.log(`Next song: ${nextSong?.name}`);
-
-                                    set((state) => {
-                                        state.current.index = 0;
-                                        state.current.isSimilar = true;
-                                        state.current.song = nextSong;
-                                        state.queue.previousNode = currentSong;
-                                        state.current.time = 0;
-                                        state.current.player = 1;
-                                        state.current.status = PlayerStatus.PLAYING;
-                                        state.queue.default = [nextSong];
-                                    });
-                                    return true;
-                                })();
-                                return true;
-                            }
-                            return false;
-                        },
                         player1: () => {
                             return get().actions.getPlayerData().player1;
                         },
@@ -930,9 +943,7 @@ export const usePlayerStore = create<PlayerSlice>()(
                             const { repeat } = get();
                             console.log('Going to previous song');
 
-                            if (get().current.isSimilar) {
-                                get().actions.backtraceHistory();
-                            } else if (get().shuffle === PlayerShuffle.TRACK) {
+                            if (get().shuffle === PlayerShuffle.TRACK) {
                                 console.log('Shuffle is on');
                                 const prevShuffleIndex = isFirstTrack
                                     ? 0
@@ -982,10 +993,13 @@ export const usePlayerStore = create<PlayerSlice>()(
                             const currentPosition = get().current.index;
                             let queueShift = 0;
 
+                            const removed: { isAuto: any; }[] = [];
+
                             const newQueue = queue.filter((song, index) => {
                                 const shouldKeep = !uniqueIds.includes(song.uniqueId);
                                 if (!shouldKeep && index < currentPosition) {
                                     queueShift += 1;
+                                    removed.push(song);
                                 }
 
                                 return shouldKeep;
@@ -997,9 +1011,14 @@ export const usePlayerStore = create<PlayerSlice>()(
                             const isCurrentSongRemoved =
                                 currentSong && uniqueIds.includes(currentSong?.uniqueId);
 
+                            if (isCurrentSongRemoved) removed.push(currentSong);
+
                             set((state) => {
                                 state.queue.default = newQueue;
                                 state.queue.shuffled = newShuffledQueue;
+
+                                for (let i = 0; i < removed.length; i++) if (removed[i].isAuto) state.current.autoPlayQueueSize -= 1;
+
                                 if (isCurrentSongRemoved) {
                                     state.current.song = newQueue[0];
                                     state.current.index = 0;
@@ -1305,9 +1324,14 @@ export const usePlayerStore = create<PlayerSlice>()(
                         didModInit: false,
                         history: [] as QueueSong[],
                         historyIndex: 0,
-                        historyLimit: 100,
+                        _autoPlayQueueSize: 0,
+                        get autoPlayQueueSize() { // lmao
+                            let queue = get().queue.default;
+                            return queue.filter(song => song.isAuto).length;
+                        },
+                        autoPlayQueueState: AutoPlayQueueState.IDLE,
                         index: 0,
-                        isSimilar: false,
+                        inPlaylist: false,
                         isSyncPlay: false,
                         isSyncPlayHost: false,
                         nextIndex: 0,
@@ -1361,7 +1385,6 @@ export const usePlayerControls = () =>
             next: state.actions.next,
             pause: state.actions.pause,
             play: state.actions.play,
-            playSimilar: state.actions.playSimilar,
             previous: state.actions.previous,
             setCurrentIndex: state.actions.setCurrentIndex,
             setMuted: state.actions.setMuted,

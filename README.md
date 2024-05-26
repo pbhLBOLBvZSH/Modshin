@@ -3,7 +3,7 @@
 # Mods
 - Custom lyric animations
    - Edit the CSS "StyledText1" in src\renderer\features\lyrics\lyric-line.tsx to change the animations
-- Automatically play similar songs not already heard
+- [UPDATED!] Automatically play similar songs not already heard
 - Patches (hopefully) freezing
 - Dedicated modshin settings tab
 - Expanded center controls with modshin features

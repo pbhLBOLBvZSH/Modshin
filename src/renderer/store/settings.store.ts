@@ -9,7 +9,7 @@ import { immer } from 'zustand/middleware/immer';
 import { shallow } from 'zustand/shallow';
 import { LibraryItem, LyricSource } from '/@/renderer/api/types';
 import { AppRoute } from '/@/renderer/router/routes';
-import { AppTheme } from '/@/renderer/themes/types';
+import { AppTheme, QueueSong } from '/@/renderer/themes/types';
 import {
     TableColumn,
     CrossfadeStyle,
@@ -254,6 +254,7 @@ export interface SettingsState {
     };
     modshin: {
         autoPlay: boolean;
+        autoPlayQueueLimit: number,
         historyLength: number;
         lyricAnimations: boolean;
         steelseriesPort: number;
@@ -416,6 +417,7 @@ const initialState: SettingsState = {
     },
     modshin: {
         autoPlay: true,
+        autoPlayQueueLimit: 5,
         historyLength: 10000,
         lyricAnimations: true,
         steelseriesPort: 0,

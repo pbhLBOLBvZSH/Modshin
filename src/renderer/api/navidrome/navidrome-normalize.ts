@@ -130,6 +130,7 @@ const normalizeSong = (
         updatedAt: item.updatedAt,
         userFavorite: item.starred || false,
         userRating: item.rating || null,
+        isAuto: false,
     };
 };
 

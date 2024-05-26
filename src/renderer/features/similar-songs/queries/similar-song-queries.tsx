@@ -28,16 +28,20 @@ export const useSimilarSongs = (args: QueryHookArgs<SimilarSongsQuery>) => {
     });
 };
 
-export const getMostSimilarSong = async (song: QueueSong, history: Array<QueueSong> = []) => {
-    if (modshinSettings().autoPlay === false) return null;
+export const getMostSimilarSong = async (song: QueueSong, ignore: Array<QueueSong> = [], amount: number) => {
+    const settings = modshinSettings();
+    if (settings.autoPlay === false) return null;
 
     const serverId = song.serverId;
     const server = getServerById(serverId);
 
-    if (!server) throw new Error('Server not found');
+    if (!server) {
+        console.log("No server, wtf?")
+        return null;
+    }
 
     let attempts = 0;
-    let newSong = null;
+    let newSongs: QueueSong[] = [];
     const excludeArtistIds: string[] = [];
 
     do {
@@ -59,28 +63,28 @@ export const getMostSimilarSong = async (song: QueueSong, history: Array<QueueSo
 
         console.log('response', response);
 
-        // Try to find a song that is not in the history
-        newSong = response.find((songItem) => {
+        // Try to find songs that are not in the ignore list
+        const songs = response.filter((songItem) => {
             return (
-                !history.some((historyItem) => historyItem.id === songItem.id) &&
+                !ignore.some((ignoreItem) => ignoreItem.id === songItem.id) &&
                 songItem.id !== song.id
             );
         });
 
-        // If no new song is found, add the artist of the current song to the exclude list
-        if (!newSong) {
+        // If no new songs are found, add the artist of the current song to the exclude list
+        if (songs.length === 0) {
             const artist = song.artists[0];
-            if (excludeArtistIds.indexOf(artist.id) === -1) {
-                excludeArtistIds.push(artist.id);
-            }
+            if (excludeArtistIds.indexOf(artist.id) === -1) excludeArtistIds.push(artist.id);
+        } else {
+            newSongs = [...newSongs, ...songs.slice(0, amount - newSongs.length)];
         }
 
         attempts += 1;
-    } while (!newSong && attempts < 25); // Limit the number of attempts to prevent infinite loops
+    } while (newSongs.length < amount && attempts < 25); // Limit the number of attempts to prevent infinite loops
 
-    // If a new song is found, return it
-    if (newSong) return newSong;
+    // If new songs are found, return them
+    if (newSongs.length > 0) return newSongs.map(song => (song.isAuto = true, song));
 
-    // If no new song is found, return null
+    // If no new songs are found, return null
     return null;
 };
