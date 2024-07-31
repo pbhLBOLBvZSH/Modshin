@@ -93,6 +93,28 @@ export const ControlSettings = () => {
         {
             control: (
                 <Switch
+                    aria-label="Toggle using native aspect ratio"
+                    defaultChecked={settings.nativeAspectRatio}
+                    onChange={(e) =>
+                        setSettings({
+                            general: {
+                                ...settings,
+                                nativeAspectRatio: e.currentTarget.checked,
+                            },
+                        })
+                    }
+                />
+            ),
+            description: t('setting.imageAspectRatio', {
+                context: 'description',
+                postProcess: 'sentenceCase',
+            }),
+            isHidden: false,
+            title: t('setting.imageAspectRatio', { postProcess: 'sentenceCase' }),
+        },
+        {
+            control: (
+                <Switch
                     aria-label="Toggle skip buttons"
                     defaultChecked={settings.skipButtons?.enabled}
                     onChange={(e) =>
@@ -376,6 +398,28 @@ export const ControlSettings = () => {
             }),
             isHidden: false,
             title: t('setting.genreBehavior', { postProcess: 'sentenceCase' }),
+        },
+        {
+            control: (
+                <Switch
+                    aria-label={t('setting.homeFeature', { postProcess: 'sentenceCase' })}
+                    defaultChecked={settings.homeFeature}
+                    onChange={(e) =>
+                        setSettings({
+                            general: {
+                                ...settings,
+                                homeFeature: e.currentTarget.checked,
+                            },
+                        })
+                    }
+                />
+            ),
+            description: t('setting.homeFeature', {
+                context: 'description',
+                postProcess: 'sentenceCase',
+            }),
+            isHidden: false,
+            title: t('setting.homeFeature', { postProcess: 'sentenceCase' }),
         },
     ];
 

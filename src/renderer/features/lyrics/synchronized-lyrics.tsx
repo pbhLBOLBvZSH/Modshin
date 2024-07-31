@@ -4,6 +4,7 @@ import {
     useCurrentTime,
     useLyricsSettings,
     usePlaybackType,
+    usePlayerData,
     useSeeked,
 } from '/@/renderer/store';
 import { PlaybackType, PlayerStatus } from '/@/renderer/types';
@@ -12,6 +13,7 @@ import isElectron from 'is-electron';
 import { PlayersRef } from '/@/renderer/features/player/ref/players-ref';
 import { FullLyricsMetadata, SynchronizedLyricsArray } from '/@/renderer/api/types';
 import styled from 'styled-components';
+import { useCenterControls } from '/@/renderer/features/player/hooks/use-center-controls';
 
 const mpvPlayer = isElectron() ? window.electron.mpvPlayer : null;
 
@@ -60,8 +62,10 @@ export const SynchronizedLyrics = ({
     const playersRef = PlayersRef;
     const status = useCurrentStatus();
     const playbackType = usePlaybackType();
+    const playerData = usePlayerData();
     const now = useCurrentTime();
     const settings = useLyricsSettings();
+    const centerControls = useCenterControls({ playersRef });
 
     const seeked = useSeeked();
 
@@ -108,16 +112,18 @@ export const SynchronizedLyrics = ({
             return 0;
         }
 
-        const player = (
-            playersRef.current.player1 ?? playersRef.current.player2
-        ).getInternalPlayer();
+        const player =
+            playerData.current.player === 1
+                ? playersRef.current.player1
+                : playersRef.current.player2;
+        const underlying = player?.getInternalPlayer();
 
         // If it is null, this probably means we added a new song while the lyrics tab is open
         // and the queue was previously empty
-        if (!player) return 0;
+        if (!underlying) return 0;
 
-        return player.currentTime;
-    }, [playbackType, playersRef]);
+        return underlying.currentTime;
+    }, [playbackType, playersRef, playerData]);
 
     const prevLyric = useRef<HTMLElement | null>(null);
 
@@ -339,7 +345,7 @@ export const SynchronizedLyrics = ({
                     text={`"${name} by ${artist}"`}
                 />
             )}
-            {lyrics.map(([, text], idx) => (
+            {lyrics.map(([time, text], idx) => (
                 <LyricLine
                     key={idx}
                     alignment={settings.alignment}
@@ -348,6 +354,7 @@ export const SynchronizedLyrics = ({
                     fontSize={settings.fontSize}
                     id={`lyric-${idx}`}
                     text={text}
+                    onClick={() => centerControls.handleSeekSlider(time / 1000)}
                 />
             ))}
         </SynchronizedLyricsContainer>

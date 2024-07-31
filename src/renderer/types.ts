@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { ServerFeatures } from '/@/renderer/api/features-types';
 import {
     Album,
@@ -37,6 +38,7 @@ export type TableType =
 
 export type CardRow<T> = {
     arrayProperty?: string;
+    format?: (value: T) => ReactNode;
     property: keyof T;
     route?: CardRoute;
 };
@@ -209,8 +211,7 @@ export type GridCardData = {
     route: CardRoute;
 };
 
-export type SongUpdate = {
-    currentTime?: number;
+export type SongState = {
     repeat?: PlayerRepeat;
     shuffle?: boolean;
     song?: QueueSong;

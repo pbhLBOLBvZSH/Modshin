@@ -283,7 +283,7 @@
             "viewDiscography": "view discography",
             "relatedArtists": "related $t(entity.artist_other)",
             "topSongs": "top songs",
-            "topSongsFrom": "Top songs from {{title}}",
+            "topSongsFrom": "top songs from {{title}}",
             "viewAll": "view all",
             "viewAllTracks": "view all $t(entity.track_other)"
         },
@@ -295,7 +295,7 @@
             "moreFromGeneric": "more from {{item}}"
         },
         "albumList": {
-            "artistAlbums": "Albums by {{artist}}",
+            "artistAlbums": "albums by {{artist}}",
             "genreAlbums": "\"{{genre}}\" $t(entity.album_other)",
             "title": "$t(entity.album_other)"
         },
@@ -324,6 +324,7 @@
             "moveToTop": "$t(action.moveToTop)",
             "numberSelected": "{{count}} selected",
             "play": "$t(player.play)",
+            "playSimilarSongs": "$t(player.playSimilarSongs)",
             "removeFromFavorites": "$t(action.removeFromFavorites)",
             "removeFromPlaylist": "$t(action.removeFromPlaylist)",
             "removeFromQueue": "$t(action.removeFromQueue)",
@@ -403,7 +404,7 @@
             "tracks": "$t(entity.track_other)"
         },
         "trackList": {
-            "artistTracks": "Tracks by {{artist}}",
+            "artistTracks": "tracks by {{artist}}",
             "genreTracks": "\"{{genre}}\" $t(entity.track_other)",
             "title": "$t(entity.track_other)"
         }
@@ -422,6 +423,7 @@
         "playbackSpeed": "playback speed",
         "playRandom": "play random",
         "syncPlay": "Join a group",
+        "playSimilarSongs": "play similar songs",
         "previous": "previous",
         "queue_clear": "clear queue",
         "queue_moveToBottom": "move selected to top",
@@ -504,6 +506,8 @@
         "globalMediaHotkeys_description": "enable or disable the usage of your system media hotkeys to control playback",
         "homeConfiguration": "home page configuration",
         "homeConfiguration_description": "configure what items are shown, and in what order, on the home page",
+        "homeFeature": "home featured carousel",
+        "homeFeature_description": "controls whether to show the large featured carousel on the home page",
         "hotkey_browserBack": "browser back",
         "hotkey_browserForward": "browser forward",
         "hotkey_favoriteCurrentSong": "favorite $t(common.currentSong)",
@@ -537,6 +541,8 @@
         "hotkey_volumeUp": "volume up",
         "hotkey_zoomIn": "zoom in",
         "hotkey_zoomOut": "zoom out",
+        "imageAspectRatio": "use native cover art aspect ratio",
+        "imageAspectRatio_description": "if enabled, cover art will be shown using their native aspect ratio. for art that is not 1:1, the remaining space will be empty",
         "language": "language",
         "language_description": "sets the language for the application ($t(common.restartRequired))",
         "lyricFetch": "fetch lyrics from the internet",
@@ -703,6 +709,7 @@
                 "releaseDate": "release date",
                 "rowIndex": "row index",
                 "size": "$t(common.size)",
+                "songCount": "$t(entity.track_other)",
                 "title": "$t(common.title)",
                 "titleCombined": "$t(common.title) (combined)",
                 "trackNumber": "track number",

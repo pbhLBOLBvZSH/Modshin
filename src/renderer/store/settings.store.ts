@@ -211,8 +211,10 @@ export interface SettingsState {
         externalLinks: boolean;
         followSystemTheme: boolean;
         genreTarget: GenreTarget;
+        homeFeature: boolean;
         homeItems: SortableItem<HomeItem>[];
         language: string;
+        nativeAspectRatio: boolean;
         passwordStore?: string;
         playButtonBehavior: Play;
         resume: boolean;
@@ -343,8 +345,10 @@ const initialState: SettingsState = {
         externalLinks: true,
         followSystemTheme: false,
         genreTarget: GenreTarget.TRACK,
+        homeFeature: true,
         homeItems,
         language: 'en',
+        nativeAspectRatio: false,
         passwordStore: undefined,
         playButtonBehavior: Play.NOW,
         resume: false,

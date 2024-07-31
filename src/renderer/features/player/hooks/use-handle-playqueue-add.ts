@@ -2,13 +2,7 @@ import { useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCurrentServer, usePlayerControls, usePlayerStore } from '/@/renderer/store';
 import { usePlaybackType } from '/@/renderer/store/settings.store';
-import {
-    PlayQueueAddOptions,
-    Play,
-    PlaybackType,
-    PlayerStatus,
-    PlayerShuffle,
-} from '/@/renderer/types';
+import { PlayQueueAddOptions, Play, PlaybackType } from '/@/renderer/types';
 import { toast } from '/@/renderer/components/toast/index';
 import isElectron from 'is-electron';
 import { nanoid } from 'nanoid/non-secure';
@@ -29,6 +23,8 @@ import {
 } from '/@/renderer/features/player/utils';
 import { queryKeys } from '/@/renderer/api/query-keys';
 import { useTranslation } from 'react-i18next';
+import { PlayersRef } from '/@/renderer/features/player/ref/players-ref';
+import { updateSong } from '/@/renderer/features/player/update-remote-song';
 
 const getRootQueryKey = (itemType: LibraryItem, serverId: string) => {
     let queryKey;
@@ -58,7 +54,6 @@ const getRootQueryKey = (itemType: LibraryItem, serverId: string) => {
 };
 
 const mpvPlayer = isElectron() ? window.electron.mpvPlayer : null;
-const remote = isElectron() ? window.electron.remote : null;
 
 const addToQueue = usePlayerStore.getState().actions.addToQueue;
 
@@ -170,6 +165,8 @@ export const useHandlePlayQueueAdd = () => {
             const hadSong = usePlayerStore.getState().queue.default.length > 0;
             const playerData = addToQueue({ initialIndex: initialSongIndex, playType, songs });
 
+            updateSong(playerData.current.song);
+
             if (playbackType === PlaybackType.LOCAL) {
                 mpvPlayer!.volume(usePlayerStore.getState().volume);
 
@@ -179,6 +176,15 @@ export const useHandlePlayQueueAdd = () => {
                 } else {
                     mpvPlayer!.setQueueNext(playerData);
                 }
+            } else {
+                const player =
+                    playerData.current.player === 1
+                        ? PlayersRef.current?.player1
+                        : PlayersRef.current?.player2;
+                const underlying = player?.getInternalPlayer();
+                if (underlying && playType === Play.NOW) {
+                    underlying.currentTime = 0;
+                }
             }
 
             // We should only play if the queue was empty, or we are doing play NOW
@@ -186,14 +192,6 @@ export const useHandlePlayQueueAdd = () => {
             if (playType === Play.NOW || !hadSong) {
                 play();
             }
-
-            remote?.updateSong({
-                currentTime: usePlayerStore.getState().current.time,
-                repeat: usePlayerStore.getState().repeat,
-                shuffle: usePlayerStore.getState().shuffle !== PlayerShuffle.NONE,
-                song: playerData.current.song,
-                status: PlayerStatus.PLAYING,
-            });
 
             return null;
         },
