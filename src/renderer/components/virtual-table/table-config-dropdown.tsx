@@ -93,6 +93,10 @@ export const SONG_TABLE_COLUMNS = [
         value: TableColumn.PLAY_COUNT,
     },
     {
+        label: i18n.t('table.config.label.playCountWorld', { postProcess: 'titleCase' }),
+        value: TableColumn.PLAY_COUNT_WORLD,
+    },
+    {
         label: i18n.t('table.config.label.size', { postProcess: 'titleCase' }),
         value: TableColumn.SIZE,
     },

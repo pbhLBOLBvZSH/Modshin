@@ -4,7 +4,7 @@ import {
     SettingOption,
 } from '/@/renderer/features/settings/components/settings-section';
 import { useTranslation } from 'react-i18next';
-import { Select, Switch, toast, NumberInput } from '/@/renderer/components';
+import { Select, Switch, toast, NumberInput, TextInput } from '/@/renderer/components';
 import { VisualiserType, VisualiserColorMode, VisualiserFreqScale, VisualiserMode } from '/@/renderer/types';
 import { useState } from 'react';
 
@@ -61,6 +61,26 @@ export const ModSettings = () => {
         },
         {
             control: (
+                <TextInput
+                    defaultChecked={settings.lastfmApiKey}
+                    onBlur={(e) => {
+                        setSettings({
+                            modshin: {
+                                ...settings,
+                                lastfmApiKey: e.currentTarget.value.toString(),
+                            },
+                        });
+                    }}
+                />
+            ),
+            description: t('setting.lastfmApiKey', {
+                context: 'description',
+                postProcess: 'sentenceCase',
+            }),
+            title: t('setting.lastfmApiKey', { postProcess: 'sentenceCase' }),
+        },
+        /*{ // history isnt a thing anymore
+            control: (
                 <NumberInput
                     defaultValue={settings.historyLength}
                     onBlur={(e) => {
@@ -78,7 +98,7 @@ export const ModSettings = () => {
                 postProcess: 'sentenceCase',
             }),
             title: t('setting.historyLength', { postProcess: 'sentenceCase' }),
-        },
+        },*/
         {
             control: (
                 <NumberInput

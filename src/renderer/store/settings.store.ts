@@ -259,6 +259,7 @@ export interface SettingsState {
         autoPlayQueueLimit: number,
         historyLength: number;
         lyricAnimations: boolean;
+        lastfmApiKey: string;
         steelseriesPort: number;
         visualiser: VisualiserType[];
         visualiserColorMode: VisualiserColorMode[];
@@ -425,6 +426,7 @@ const initialState: SettingsState = {
         historyLength: 10000,
         lyricAnimations: true,
         steelseriesPort: 0,
+        lastfmApiKey: '',
         visualiser: [VisualiserType.BAR_GRAPH],
         visualiserColorMode: [VisualiserColorMode.GRADIENT],
         visualiserFreqScale: [VisualiserFreqScale.LINEAR],
@@ -483,6 +485,10 @@ const initialState: SettingsState = {
                 },
                 {
                     column: TableColumn.PLAY_COUNT,
+                    width: 100,
+                },
+                {
+                    column: TableColumn.PLAY_COUNT_WORLD,
                     width: 100,
                 },
                 {

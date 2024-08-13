@@ -14,6 +14,8 @@ import {
     ServerType,
 } from '/@/renderer/api/types';
 
+import { getPlayCountWorld } from '/@/renderer/features/lastfm/queries/lastfm-queries';
+
 const getStreamUrl = (args: {
     container?: string;
     deviceId: string;
@@ -127,7 +129,7 @@ const normalizeSong = (
     deviceId: string,
     imageSize?: number,
 ): Song => {
-    return {
+    var x = {
         album: item.Album,
         albumArtists: item.AlbumArtists?.map((entry) => ({
             id: entry.Id,
@@ -174,6 +176,8 @@ const normalizeSong = (
         path: (item.MediaSources && item.MediaSources[0]?.Path) || null,
         peak: null,
         playCount: (item.UserData && item.UserData.PlayCount) || 0,
+        playCountWorld: "",
+        playCountWorldRaw: 0,
         playlistItemId: item.PlaylistItemId,
         // releaseDate: (item.ProductionYear && new Date(item.ProductionYear, 0, 1).toISOString()) || null,
         releaseDate: null,
@@ -196,6 +200,14 @@ const normalizeSong = (
         userRating: null,
         isAuto: false,
     };
+    var playCountWorld = getPlayCountWorld(x);
+    if (playCountWorld == undefined) {
+        playCountWorld = {pretty: "?", raw:0};
+    }
+    console.log("playCountWorld: ", playCountWorld);
+    x.playCountWorld = playCountWorld.pretty;
+    x.playCountWorldRaw = playCountWorld.raw;
+    return x;
 };
 
 const normalizeAlbum = (

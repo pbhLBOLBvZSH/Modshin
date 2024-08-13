@@ -211,6 +211,8 @@ export type Song = {
     path: string | null;
     peak: GainInfo | null;
     playCount: number;
+    playCountWorld: string;
+    playCountWorldRaw: number;
     playlistItemId?: string;
     releaseDate: string | null;
     releaseYear: string | null;
@@ -474,6 +476,7 @@ export enum SongListSort {
     ID = 'id',
     NAME = 'name',
     PLAY_COUNT = 'playCount',
+    PLAY_COUNT_WORLD_RAW = 'playCountWorldRaw',
     RANDOM = 'random',
     RATING = 'rating',
     RECENTLY_ADDED = 'recentlyAdded',
@@ -523,6 +526,7 @@ export const songListSortMap: SongListSortMap = {
         id: undefined,
         name: JFSongListSort.NAME,
         playCount: JFSongListSort.PLAY_COUNT,
+        playCountWorldRaw: JFSongListSort.PLAY_COUNT_WORLD_RAW,
         random: JFSongListSort.RANDOM,
         rating: undefined,
         recentlyAdded: JFSongListSort.RECENTLY_ADDED,
@@ -543,6 +547,7 @@ export const songListSortMap: SongListSortMap = {
         id: NDSongListSort.ID,
         name: NDSongListSort.TITLE,
         playCount: NDSongListSort.PLAY_COUNT,
+        playCountWorldRaw: NDSongListSort.PLAY_COUNT_WORLD,
         random: NDSongListSort.RANDOM,
         rating: NDSongListSort.RATING,
         recentlyAdded: NDSongListSort.RECENTLY_ADDED,
@@ -563,6 +568,7 @@ export const songListSortMap: SongListSortMap = {
         id: undefined,
         name: undefined,
         playCount: undefined,
+        playCountWorldRaw: undefined,
         random: undefined,
         rating: undefined,
         recentlyAdded: undefined,

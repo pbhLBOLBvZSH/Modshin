@@ -144,12 +144,11 @@ const VisualiserRoute = () => {
         <motion.main
             animate={{}}
             ref={canvasRef}
-            // animate="animate"
             className={getStyles(settings.visualiser)}
-            // exit="exit"
-            // initial="initial"
-            // transition={{ duration: 0.3, ease: 'easeIn' }}
-            // variants={variants}
+            style={{
+                transform: "translateZ(0)",
+                willChange: "transform, opacity"
+            }}
         >
         </motion.main>
     );

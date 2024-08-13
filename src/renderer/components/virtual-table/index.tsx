@@ -55,12 +55,12 @@ const TableWrapper = styled.div`
     flex-direction: column;
     width: 100%;
     height: 100%;
-`;
-
-const DummyHeader = styled.div<{ height?: number }>`
+    `;
+    
+    const DummyHeader = styled.div<{ height?: number }>`
     position: absolute;
     height: ${({ height }) => height || 36}px;
-`;
+    `;
 
 const tableColumns: { [key: string]: ColDef } = {
     actions: {
@@ -85,7 +85,7 @@ const tableColumns: { [key: string]: ColDef } = {
                       value: params.data?.album,
                   }
                 : undefined,
-        width: 200,
+        width: 150,
     },
     albumArtist: {
         cellRenderer: AlbumArtistCell,
@@ -243,6 +243,30 @@ const tableColumns: { [key: string]: ColDef } = {
         valueGetter: (params: ValueGetterParams) =>
             params.data ? params.data.playCount : undefined,
         width: 90,
+    },
+    playCountWorld: {
+        cellRenderer: (params: ICellRendererParams) => GenericCell(params, { position: 'center' }),
+        colId: TableColumn.PLAY_COUNT_WORLD,
+        field: 'playCountWorld',
+        headerComponent: (params: IHeaderParams) =>
+            GenericTableHeader(params, { position: 'center' }),
+        headerName: i18n.t('table.column.playCountWorld'),
+        suppressSizeToFit: true,
+        valueGetter: (params: ValueGetterParams) =>
+            params.data ? params.data.playCountWorld : "?",
+        width: 180,
+    },
+    playCountWorldRaw: {
+        cellRenderer: (params: ICellRendererParams) => GenericCell(params, { position: 'center' }),
+        colId: TableColumn.PLAY_COUNT_WORLD,
+        field: 'playCountWorldRaw',
+        headerComponent: (params: IHeaderParams) =>
+            GenericTableHeader(params, { position: 'center' }),
+        headerName: i18n.t('table.column.playCountWorldRaw'),
+        suppressSizeToFit: true,
+        valueGetter: (params: ValueGetterParams) =>
+            params.data ? params.data.playCountWorldRaw : "?",
+        width: 180,
     },
     releaseDate: {
         cellRenderer: (params: ICellRendererParams) => GenericCell(params, { position: 'center' }),

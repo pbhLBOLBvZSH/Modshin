@@ -246,6 +246,8 @@ const ndSongListSort = {
     GENRE: 'genre',
     ID: 'id',
     PLAY_COUNT: 'playCount',
+    PLAY_COUNT_WORLD: 'playCountWorld',
+    PLAY_COUNT_WORLD_RAW: 'playCountWorldRaw',
     PLAY_DATE: 'playDate',
     RATING: 'rating',
     RECENTLY_ADDED: 'createdAt',

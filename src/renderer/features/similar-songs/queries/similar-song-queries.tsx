@@ -46,7 +46,7 @@ export const getMostSimilarSong = async (song: QueueSong, ignore: Array<QueueSon
 
     do {
         const query = {
-            excludeArtistIds: excludeArtistIds.join(','),
+            //excludeArtistIds: excludeArtistIds.join(','),
             songId: song.id,
         };
 

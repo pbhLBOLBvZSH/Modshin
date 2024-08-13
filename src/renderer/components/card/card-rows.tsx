@@ -239,6 +239,12 @@ export const SONG_CARD_ROWS: { [key: string]: CardRow<Song> } = {
     playCount: {
         property: 'playCount',
     },
+    playCountWorld: {
+        property: 'playCountWorld',
+    },
+    playCountWorldRaw: {
+        property: 'playCountWorldRaw',
+    },
     rating: {
         format: (song) => formatRating(song),
         property: 'userRating',

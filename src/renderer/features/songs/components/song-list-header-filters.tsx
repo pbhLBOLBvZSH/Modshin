@@ -58,6 +58,11 @@ const FILTERS = {
             value: SongListSort.PLAY_COUNT,
         },
         {
+            defaultOrder: SortOrder.DESC,
+            name: i18n.t('filter.playCountWorld', { postProcess: 'titleCase' }),
+            value: SongListSort.PLAY_COUNT_WORLD_RAW,
+        },
+        {
             defaultOrder: SortOrder.ASC,
             name: i18n.t('filter.name', { postProcess: 'titleCase' }),
             value: SongListSort.NAME,
@@ -138,6 +143,11 @@ const FILTERS = {
             defaultOrder: SortOrder.DESC,
             name: i18n.t('filter.playCount', { postProcess: 'titleCase' }),
             value: SongListSort.PLAY_COUNT,
+        },
+        {
+            defaultOrder: SortOrder.DESC,
+            name: i18n.t('filter.playCountWorld', { postProcess: 'titleCase' }),
+            value: SongListSort.PLAY_COUNT_WORLD_RAW,
         },
         {
             defaultOrder: SortOrder.ASC,

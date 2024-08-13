@@ -158,6 +158,7 @@ export const AlbumArtistDetailContent = ({ background }: AlbumArtistDetailConten
                 { column: TableColumn.ALBUM, width: 0 },
                 { column: TableColumn.YEAR, width: 0 },
                 { column: TableColumn.PLAY_COUNT, width: 0 },
+                { column: TableColumn.PLAY_COUNT_WORLD, width: 0 },
                 { column: TableColumn.USER_FAVORITE, width: 0 },
             ]),
         [],

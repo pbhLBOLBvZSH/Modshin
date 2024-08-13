@@ -60,6 +60,9 @@ export const SongListGridView = ({ gridRef, itemCount }: any) => {
             case SongListSort.PLAY_COUNT:
                 rows.push(SONG_CARD_ROWS.playCount);
                 break;
+            case SongListSort.PLAY_COUNT_WORLD_RAW:
+                rows.push(SONG_CARD_ROWS.playCountWorldRaw);
+                break
             case SongListSort.RANDOM:
                 break;
             case SongListSort.RATING:

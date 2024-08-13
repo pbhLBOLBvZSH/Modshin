@@ -168,6 +168,7 @@ export enum TableColumn {
     OWNER = 'username',
     PATH = 'path',
     PLAY_COUNT = 'playCount',
+    PLAY_COUNT_WORLD = 'playCountWorld',
     RELEASE_DATE = 'releaseDate',
     ROW_INDEX = 'rowIndex',
     SIZE = 'size',
