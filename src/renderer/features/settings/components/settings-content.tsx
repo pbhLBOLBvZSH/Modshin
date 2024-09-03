@@ -29,6 +29,12 @@ const HotkeysTab = lazy(() =>
     })),
 );
 
+const AdvancedTab = lazy(() =>
+    import('/@/renderer/features/settings/components/advanced/advanced-tab').then((module) => ({
+        default: module.AdvancedTab,
+    })),
+);
+
 const ModshinTab = lazy(() =>
     import('/@/renderer/features/settings/components/modshin/modshin-tab').then((module) => ({
         default: module.ModshinTab,
@@ -71,6 +77,9 @@ export const SettingsContent = () => {
                             {t('page.setting.windowTab', { postProcess: 'sentenceCase' })}
                         </Tabs.Tab>
                     )}
+                    <Tabs.Tab value="advanced">
+                        {t('page.setting.advanced', { postProcess: 'sentenceCase' })}
+                    </Tabs.Tab>
                     <Tabs.Tab value="modshin">
                         {t('page.setting.modshinTab', { postProcess: 'sentenceCase' })}
                     </Tabs.Tab>
@@ -89,6 +98,9 @@ export const SettingsContent = () => {
                         <ApplicationTab />
                     </Tabs.Panel>
                 )}
+                <Tabs.Panel value="advanced">
+                    <AdvancedTab />
+                </Tabs.Panel>
                 <Tabs.Panel value="modshin">
                     <ModshinTab />
                 </Tabs.Panel>

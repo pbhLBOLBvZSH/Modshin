@@ -235,6 +235,15 @@ export const contract = c.router({
             400: jfType._response.error,
         },
     },
+    movePlaylistItem: {
+        body: null,
+        method: 'POST',
+        path: 'playlists/:playlistId/items/:itemId/move/:newIdx',
+        responses: {
+            200: jfType._response.moveItem,
+            400: jfType._response.error,
+        },
+    },
     postSyncPlayBuffering: {
         body: jfType._parameters.syncPlayBuffering,
         method: 'POST',
@@ -433,8 +442,8 @@ export const contract = c.router({
     },
     updatePlaylist: {
         body: jfType._parameters.updatePlaylist,
-        method: 'PUT',
-        path: 'items/:id',
+        method: 'POST',
+        path: 'playlists/:id',
         responses: {
             200: jfType._response.updatePlaylist,
             400: jfType._response.error,

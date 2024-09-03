@@ -563,6 +563,7 @@ const songListParameters = paginationParameters.merge(
         GenreIds: z.string().optional(),
         Genres: z.string().optional(),
         IsFavorite: z.boolean().optional(),
+        IsPlayed: z.boolean().optional(),
         SearchTerm: z.string().optional(),
         SortBy: z.nativeEnum(songListSort).optional(),
         Tags: z.string().optional(),
@@ -583,9 +584,9 @@ const playlistDetailParameters = baseParameters.extend({
 });
 
 const createPlaylistParameters = z.object({
+    IsPublic: z.boolean().optional(),
     MediaType: z.literal('Audio'),
     Name: z.string(),
-    Overview: z.string(),
     UserId: z.string(),
 });
 
@@ -597,9 +598,9 @@ const updatePlaylist = z.null();
 
 const updatePlaylistParameters = z.object({
     Genres: z.array(genreItem),
+    IsPublic: z.boolean().optional(),
     MediaType: z.literal('Audio'),
     Name: z.string(),
-    Overview: z.string(),
     PremiereDate: z.null(),
     ProviderIds: z.object({}),
     Tags: z.array(genericItem),
@@ -701,6 +702,8 @@ export enum JellyfinExtensions {
     SONG_LYRICS = 'songLyrics',
 }
 
+const moveItem = z.null();
+
 export const jfType = {
     _enum: {
         albumArtistList: albumArtistListSort,
@@ -750,6 +753,7 @@ export const jfType = {
         genre,
         genreList,
         lyrics,
+        moveItem,
         musicFolderList,
         playlist,
         playlistList,

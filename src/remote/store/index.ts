@@ -139,6 +139,12 @@ export const useRemoteStore = create<SettingsSlice>()(
                                         });
                                         break;
                                     }
+                                    case 'position': {
+                                        set((state) => {
+                                            state.info.position = data;
+                                        });
+                                        break;
+                                    }
                                     case 'proxy': {
                                         set((state) => {
                                             if (state.info.song) {
@@ -169,7 +175,6 @@ export const useRemoteStore = create<SettingsSlice>()(
                                     }
                                     case 'song': {
                                         set((state) => {
-                                            console.log(data);
                                             state.info.song = data;
                                         });
                                         break;

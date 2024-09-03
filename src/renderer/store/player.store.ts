@@ -468,8 +468,8 @@ export const usePlayerStore = create<PlayerSlice>()(
                                 currentPlayer === 1
                                     ? queue[currentIndex]
                                     : nextSongIndex !== undefined
-                                    ? queue[nextSongIndex]
-                                    : undefined;
+                                      ? queue[nextSongIndex]
+                                      : undefined;
 
                             player2 =
                                 currentPlayer === 1
@@ -989,17 +989,19 @@ export const usePlayerStore = create<PlayerSlice>()(
                         },
                         removeFromQueue: (uniqueIds) => {
                             const queue = get().queue.default;
-                            const currentSong = get().current.song;
                             const currentPosition = get().current.index;
                             let queueShift = 0;
 
-                            const removed: { isAuto: any; }[] = [];
+                            let isCurrentSongRemoved = false;
 
                             const newQueue = queue.filter((song, index) => {
                                 const shouldKeep = !uniqueIds.includes(song.uniqueId);
-                                if (!shouldKeep && index < currentPosition) {
-                                    queueShift += 1;
-                                    removed.push(song);
+                                if (!shouldKeep) {
+                                    if (index < currentPosition) {
+                                        queueShift += 1;
+                                    } else if (index === currentPosition) {
+                                        isCurrentSongRemoved = true;
+                                    }
                                 }
 
                                 return shouldKeep;
@@ -1008,11 +1010,6 @@ export const usePlayerStore = create<PlayerSlice>()(
                                 (uniqueId) => !uniqueIds.includes(uniqueId),
                             );
 
-                            const isCurrentSongRemoved =
-                                currentSong && uniqueIds.includes(currentSong?.uniqueId);
-
-                            if (isCurrentSongRemoved) removed.push(currentSong);
-
                             set((state) => {
                                 state.queue.default = newQueue;
                                 state.queue.shuffled = newShuffledQueue;
@@ -1020,8 +1017,12 @@ export const usePlayerStore = create<PlayerSlice>()(
                                 for (let i = 0; i < removed.length; i++) if (removed[i].isAuto) state.current.autoPlayQueueSize -= 1;
 
                                 if (isCurrentSongRemoved) {
-                                    state.current.song = newQueue[0];
-                                    state.current.index = 0;
+                                    const newPosition = Math.min(
+                                        newQueue.length - 1,
+                                        currentPosition - queueShift,
+                                    );
+                                    state.current.song = newQueue[newPosition];
+                                    state.current.index = newPosition;
                                 } else {
                                     // if we removed any songs prior to the current one,
                                     // shift the index back as necessary
@@ -1242,8 +1243,19 @@ export const usePlayerStore = create<PlayerSlice>()(
                         },
                         setShuffle: (type: PlayerShuffle) => {
                             if (type === PlayerShuffle.NONE) {
+                                const currentSongId = get().current.song?.uniqueId;
+
+                                let currentIndex = 0;
+
+                                if (currentSongId) {
+                                    currentIndex = get().queue.default.findIndex(
+                                        (song) => song.uniqueId === currentSongId,
+                                    );
+                                }
+
                                 set((state) => {
                                     state.shuffle = type;
+                                    state.current.index = currentIndex;
                                     state.queue.shuffled = [];
                                 });
 
@@ -1355,6 +1367,9 @@ export const usePlayerStore = create<PlayerSlice>()(
                     },
                     repeat: PlayerRepeat.NONE,
                     shuffle: PlayerShuffle.NONE,
+                    transcode: {
+                        enabled: false,
+                    },
                     volume: 50,
                 })),
                 { name: 'store_player' },

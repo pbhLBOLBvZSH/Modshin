@@ -17,6 +17,7 @@ import debounce from 'lodash/debounce';
 import { toast } from '/@/renderer/components';
 import { useTranslation } from 'react-i18next';
 import { updateSong } from '/@/renderer/features/player/update-remote-song';
+import { setAutoNext, setQueue, setQueueNext } from '/@/renderer/utils/set-transcoded-queue-data';
 
 const mpvPlayer = isElectron() ? window.electron.mpvPlayer : null;
 const mpvPlayerListener = isElectron() ? window.electron.mpvPlayerListener : null;
@@ -139,30 +140,30 @@ export const useCenterControls = (args: { playersRef: any }) => {
         if (shuffleStatus === PlayerShuffle.NONE) {
             const playerData = setShuffle(PlayerShuffle.TRACK);
             remote?.updateShuffle(true);
-            return mpvPlayer?.setQueueNext(playerData);
+            return setQueueNext(playerData);
         }
 
         const playerData = setShuffle(PlayerShuffle.NONE);
         remote?.updateShuffle(false);
-        return mpvPlayer?.setQueueNext(playerData);
+        return setQueueNext(playerData);
     }, [setShuffle, shuffleStatus]);
 
     const handleToggleRepeat = useCallback(() => {
         if (repeatStatus === PlayerRepeat.NONE) {
             const playerData = setRepeat(PlayerRepeat.ALL);
             remote?.updateRepeat(PlayerRepeat.ALL);
-            return mpvPlayer?.setQueueNext(playerData);
+            return setQueueNext(playerData);
         }
 
         if (repeatStatus === PlayerRepeat.ALL) {
             const playerData = setRepeat(PlayerRepeat.ONE);
             remote?.updateRepeat(PlayerRepeat.ONE);
-            return mpvPlayer?.setQueueNext(playerData);
+            return setQueueNext(playerData);
         }
 
         const playerData = setRepeat(PlayerRepeat.NONE);
         remote?.updateRepeat(PlayerRepeat.NONE);
-        return mpvPlayer?.setQueueNext(playerData);
+        return setQueueNext(playerData);
     }, [repeatStatus, setRepeat]);
 
     const checkIsLastTrack = useCallback(() => {
@@ -180,7 +181,7 @@ export const useCenterControls = (args: { playersRef: any }) => {
             local: () => {
                 const playerData = autoNext();
                 updateSong(playerData.current.song);
-                mpvPlayer!.autoNext(playerData);
+                setAutoNext(playerData);
                 play();
             },
             web: () => {
@@ -194,12 +195,12 @@ export const useCenterControls = (args: { playersRef: any }) => {
                 if (isLastTrack) {
                     const playerData = setCurrentIndex(0);
                     updateSong(playerData.current.song);
-                    mpvPlayer!.setQueue(playerData, true);
+                    setQueue(playerData, true);
                     pause();
                 } else {
                     const playerData = autoNext();
                     updateSong(playerData.current.song);
-                    mpvPlayer!.autoNext(playerData);
+                    setAutoNext(playerData);
                     play();
                 }
             },
@@ -219,7 +220,7 @@ export const useCenterControls = (args: { playersRef: any }) => {
             local: () => {
                 const playerData = autoNext();
                 updateSong(playerData.current.song);
-                mpvPlayer!.autoNext(playerData);
+                setAutoNext(playerData);
                 play();
             },
             web: () => {
@@ -265,7 +266,7 @@ export const useCenterControls = (args: { playersRef: any }) => {
             local: () => {
                 const playerData = next();
                 updateSong(playerData.current.song);
-                mpvPlayer!.setQueue(playerData);
+                setQueue(playerData);
             },
             web: () => {
                 const playerData = next();
@@ -278,12 +279,12 @@ export const useCenterControls = (args: { playersRef: any }) => {
                 if (isLastTrack) {
                     const playerData = setCurrentIndex(0);
                     updateSong(playerData.current.song);
-                    mpvPlayer!.setQueue(playerData, true);
+                    setQueue(playerData, true);
                     pause();
                 } else {
                     const playerData = next();
                     updateSong(playerData.current.song);
-                    mpvPlayer!.setQueue(playerData);
+                    setQueue(playerData);
                 }
             },
             web: () => {
@@ -305,7 +306,7 @@ export const useCenterControls = (args: { playersRef: any }) => {
                 if (!isLastTrack) {
                     const playerData = next();
                     updateSong(playerData.current.song);
-                    mpvPlayer!.setQueue(playerData);
+                    setQueue(playerData);
                 }
             },
             web: () => {
@@ -366,11 +367,11 @@ export const useCenterControls = (args: { playersRef: any }) => {
                 if (!isFirstTrack) {
                     const playerData = previous();
                     updateSong(playerData.current.song);
-                    mpvPlayer!.setQueue(playerData);
+                    setQueue(playerData);
                 } else {
                     const playerData = setCurrentIndex(queue.length - 1);
                     updateSong(playerData.current.song);
-                    mpvPlayer!.setQueue(playerData);
+                    setQueue(playerData);
                 }
             },
             web: () => {
@@ -391,12 +392,12 @@ export const useCenterControls = (args: { playersRef: any }) => {
                 if (isFirstTrack) {
                     const playerData = setCurrentIndex(0);
                     updateSong(playerData.current.song);
-                    mpvPlayer!.setQueue(playerData, true);
+                    setQueue(playerData, true);
                     pause();
                 } else {
                     const playerData = previous();
                     updateSong(playerData.current.song);
-                    mpvPlayer!.setQueue(playerData);
+                    setQueue(playerData);
                 }
             },
             web: () => {
@@ -415,7 +416,7 @@ export const useCenterControls = (args: { playersRef: any }) => {
             local: () => {
                 const playerData = previous();
                 updateSong(playerData.current.song);
-                mpvPlayer!.setQueue(playerData);
+                setQueue(playerData);
             },
             web: () => {
                 const playerData = previous();
@@ -481,7 +482,7 @@ export const useCenterControls = (args: { playersRef: any }) => {
             mpvPlayer!.seek(-seconds);
         } else {
             resetNextPlayer();
-            currentPlayerRef.seekTo(newTime);
+            currentPlayerRef.seekTo(newTime, 'seconds');
         }
     };
 
@@ -504,7 +505,7 @@ export const useCenterControls = (args: { playersRef: any }) => {
 
             resetNextPlayer();
             setCurrentTime(newTime, true);
-            currentPlayerRef.seekTo(newTime);
+            currentPlayerRef.seekTo(newTime, 'seconds');
         }
     };
 
@@ -512,7 +513,7 @@ export const useCenterControls = (args: { playersRef: any }) => {
         if (isMpvPlayer) {
             mpvPlayer!.seekTo(e);
         } else {
-            currentPlayerRef.seekTo(e);
+            currentPlayerRef.seekTo(e, 'seconds');
         }
     }, 100);
 
@@ -677,11 +678,11 @@ export const useCenterControls = (args: { playersRef: any }) => {
     ]);
 
     useEffect(() => {
-        if (utils?.isLinux()) {
+        if (remote) {
             const unsubCurrentTime = usePlayerStore.subscribe(
                 (state) => state.current.time,
                 (time) => {
-                    mpris?.updatePosition(time);
+                    remote.updatePosition(time);
                 },
             );
 

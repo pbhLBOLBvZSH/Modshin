@@ -53,7 +53,9 @@ const StyledText2 = styled(TextTitle)<TitleProps & { $alignment: string; $fontSi
     text-align: ${(props) => props.$alignment};
     opacity: 0.5;
 
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transition:
+        opacity 0.3s ease-in-out,
+        transform 0.3s ease-in-out;
 
     &.active {
         opacity: 1;
