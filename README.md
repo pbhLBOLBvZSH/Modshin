@@ -1,13 +1,13 @@
 # A shit mod that adds features I wanted
 
 # Mods
-- Custom lyric animations
-   - Edit the CSS "StyledText1" in src\renderer\features\lyrics\lyric-line.tsx to change the animations
-- [UPDATED!] Automatically play similar songs not already heard
-- Patches (hopefully) freezing
-- Dedicated modshin settings tab
-- Expanded center controls with modshin features
-- Audio visualiser ported over from https://github.com/kgarner7/feishin/tree/visualizer to work with the latest feishin version NOW WITH CUSTOMISATIONS
+- **Custom lyric animations**
+   - Edit the CSS `StyledText1` in `src\renderer\features\lyrics\lyric-line.tsx` to change the animations
+- **Automatically add similar songs not already heard to your queue**
+- **Dedicated modshin settings tab**
+- **Expanded center controls** with modshin features
+- ~~Audio visualiser ported over from [https://github.com/kgarner7/feishin/tree/visualizer](https://github.com/kgarner7/feishin/tree/visualizer) to work with the latest feishin version — NOW WITH CUSTOMISATIONS~~
+  - The base feishin now includes a basic visualiser, but it has been disabled in this fork in favor of the original implementation made here, which offers extended customization options. The base feishin visualizer will be disabled here until I feel it is finished.
 
 <br><br>
 <img src="https://raw.githubusercontent.com/pbhLBOLBvZSH/Modshin/development/imgs/modshin3.png" width="90%"/>
