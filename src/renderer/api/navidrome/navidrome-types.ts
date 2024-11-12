@@ -1,4 +1,10 @@
 import { z } from 'zod';
+import {
+    NDAlbumArtistListSort,
+    NDAlbumListSort,
+    NDPlaylistListSort,
+    NDSongListSort,
+} from '/@/renderer/api/navidrome.types';
 
 const sortOrderValues = ['ASC', 'DESC'] as const;
 
@@ -70,7 +76,7 @@ const albumArtist = z.object({
     externalInfoUpdatedAt: z.string(),
     externalUrl: z.string(),
     fullText: z.string(),
-    genres: z.array(genre),
+    genres: z.array(genre).nullable(),
     id: z.string(),
     largeImageUrl: z.string().optional(),
     mbzArtistId: z.string().optional(),
@@ -89,17 +95,8 @@ const albumArtist = z.object({
 
 const albumArtistList = z.array(albumArtist);
 
-const ndAlbumArtistListSort = {
-    ALBUM_COUNT: 'albumCount',
-    FAVORITED: 'starred ASC, starredAt ASC',
-    NAME: 'name',
-    PLAY_COUNT: 'playCount',
-    RATING: 'rating',
-    SONG_COUNT: 'songCount',
-} as const;
-
 const albumArtistListParameters = paginationParameters.extend({
-    _sort: z.nativeEnum(ndAlbumArtistListSort).optional(),
+    _sort: z.nativeEnum(NDAlbumArtistListSort).optional(),
     genre_id: z.string().optional(),
     name: z.string().optional(),
     starred: z.boolean().optional(),
@@ -119,7 +116,7 @@ const album = z.object({
     duration: z.number(),
     fullText: z.string(),
     genre: z.string(),
-    genres: z.array(genre),
+    genres: z.array(genre).nullable(),
     id: z.string(),
     maxYear: z.number(),
     mbzAlbumArtistId: z.string().optional(),
@@ -145,23 +142,8 @@ const album = z.object({
 
 const albumList = z.array(album);
 
-const ndAlbumListSort = {
-    ALBUM_ARTIST: 'albumArtist',
-    ARTIST: 'artist',
-    DURATION: 'duration',
-    NAME: 'name',
-    PLAY_COUNT: 'playCount',
-    PLAY_DATE: 'play_date',
-    RANDOM: 'random',
-    RATING: 'rating',
-    RECENTLY_ADDED: 'recently_added',
-    SONG_COUNT: 'songCount',
-    STARRED: 'starred',
-    YEAR: 'max_year',
-} as const;
-
 const albumListParameters = paginationParameters.extend({
-    _sort: z.nativeEnum(ndAlbumListSort).optional(),
+    _sort: z.nativeEnum(NDAlbumListSort).optional(),
     album_id: z.string().optional(),
     artist_id: z.string().optional(),
     compilation: z.boolean().optional(),
@@ -198,7 +180,7 @@ const song = z.object({
     externalUrl: z.string().optional(),
     fullText: z.string(),
     genre: z.string(),
-    genres: z.array(genre),
+    genres: z.array(genre).nullable(),
     hasCoverArt: z.boolean(),
     id: z.string(),
     imageFiles: z.string().optional(),
@@ -237,35 +219,12 @@ const song = z.object({
 
 const songList = z.array(song);
 
-const ndSongListSort = {
-    ALBUM: 'album, order_album_artist_name, disc_number, track_number, title',
-    ALBUM_ARTIST: 'order_album_artist_name, album, disc_number, track_number, title',
-    ALBUM_SONGS: 'album, discNumber, trackNumber',
-    ARTIST: 'artist',
-    BPM: 'bpm',
-    CHANNELS: 'channels',
-    COMMENT: 'comment',
-    DURATION: 'duration',
-    FAVORITED: 'starred ASC, starredAt ASC',
-    GENRE: 'genre',
-    ID: 'id',
-    PLAY_COUNT: 'playCount',
-    PLAY_COUNT_WORLD: 'playCountWorld',
-    PLAY_COUNT_WORLD_RAW: 'playCountWorldRaw',
-    PLAY_DATE: 'playDate',
-    RATING: 'rating',
-    RECENTLY_ADDED: 'createdAt',
-    TITLE: 'title',
-    TRACK: 'track',
-    YEAR: 'year, album, discNumber, trackNumber',
-};
-
 const songListParameters = paginationParameters.extend({
-    _sort: z.nativeEnum(ndSongListSort).optional(),
+    _sort: z.nativeEnum(NDSongListSort).optional(),
     album_artist_id: z.array(z.string()).optional(),
     album_id: z.array(z.string()).optional(),
     artist_id: z.array(z.string()).optional(),
-    genre_id: z.string().optional(),
+    genre_id: z.array(z.string()).optional(),
     path: z.string().optional(),
     starred: z.boolean().optional(),
     title: z.string().optional(),
@@ -292,17 +251,8 @@ const playlist = z.object({
 
 const playlistList = z.array(playlist);
 
-const ndPlaylistListSort = {
-    DURATION: 'duration',
-    NAME: 'name',
-    OWNER: 'ownerName',
-    PUBLIC: 'public',
-    SONG_COUNT: 'songCount',
-    UPDATED_AT: 'updatedAt',
-} as const;
-
 const playlistListParameters = paginationParameters.extend({
-    _sort: z.nativeEnum(ndPlaylistListSort).optional(),
+    _sort: z.nativeEnum(NDPlaylistListSort).optional(),
     owner_id: z.string().optional(),
     q: z.string().optional(),
     smart: z.boolean().optional(),
@@ -369,11 +319,11 @@ const moveItem = z.null();
 
 export const ndType = {
     _enum: {
-        albumArtistList: ndAlbumArtistListSort,
-        albumList: ndAlbumListSort,
+        albumArtistList: NDAlbumArtistListSort,
+        albumList: NDAlbumListSort,
         genreList: genreListSort,
-        playlistList: ndPlaylistListSort,
-        songList: ndSongListSort,
+        playlistList: NDPlaylistListSort,
+        songList: NDSongListSort,
         userList: ndUserListSort,
     },
     _parameters: {

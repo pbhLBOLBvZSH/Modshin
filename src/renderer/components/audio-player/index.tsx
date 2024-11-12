@@ -18,6 +18,7 @@ import {
 import { useSettingsStore, useSettingsStoreActions } from '/@/renderer/store/settings.store';
 import type { CrossfadeStyle } from '/@/renderer/types';
 import { PlaybackStyle, PlayerStatus } from '/@/renderer/types';
+import { useWebAudio } from '/@/renderer/features/player/hooks/use-webaudio';
 import { getServerById, TranscodingConfig, usePlaybackSettings, useSpeed } from '/@/renderer/store';
 import { toast } from '/@/renderer/components/toast';
 import { api } from '/@/renderer/api';
@@ -44,7 +45,6 @@ export type AudioPlayerProgress = {
 const getDuration = (ref: any) => {
     return ref.current?.player?.player?.player?.duration;
 };
-
 
 // Credits: https://gist.github.com/novwhisky/8a1a0168b94f3b6abfaa?permalink_comment_id=1551393#gistcomment-1551393
 // This is used so that the player will always have an <audio> element. This means that
@@ -113,7 +113,7 @@ export const AudioPlayer = forwardRef(
         const [isTransitioning, setIsTransitioning] = useState(false);
         const audioDeviceId = useSettingsStore((state) => state.playback.audioDeviceId);
         const playback = useSettingsStore((state) => state.playback.mpvProperties);
-        const useWebAudiox = useSettingsStore((state) => state.playback.webAudio);
+        const shouldUseWebAudio = useSettingsStore((state) => state.playback.webAudio);
         const { resetSampleRate } = useSettingsStoreActions();
         const playbackSpeed = useSpeed();
         const { transcode } = usePlaybackSettings();
@@ -178,7 +178,7 @@ export const AudioPlayer = forwardRef(
         );
 
         useEffect(() => {
-            if (useWebAudiox && 'AudioContext' in window) {
+            if (shouldUseWebAudio && 'AudioContext' in window) {
                 let context: AudioContext;
 
                 try {

@@ -18,6 +18,7 @@ import {
     RiAddBoxFill,
     RiAddCircleFill,
     RiArrowDownLine,
+    RiArrowGoForwardLine,
     RiArrowRightSFill,
     RiArrowUpLine,
     RiDeleteBinFill,
@@ -31,6 +32,7 @@ import {
     RiInformationFill,
     RiRadio2Fill,
     RiDownload2Line,
+    RiShuffleFill,
 } from 'react-icons/ri';
 import { AnyLibraryItems, LibraryItem, ServerType, AnyLibraryItem } from '/@/renderer/api/types';
 import {
@@ -493,17 +495,24 @@ export const ContextMenuProvider = ({ children }: ContextMenuProviderProps) => {
     const removeFromPlaylistMutation = useRemoveFromPlaylist();
 
     const handleRemoveFromPlaylist = useCallback(() => {
-        const songId =
-            (serverType === ServerType.NAVIDROME || ServerType.JELLYFIN
-                ? ctx.dataNodes?.map((node) => node.data.playlistItemId)
-                : ctx.dataNodes?.map((node) => node.data.id)) || [];
+        let songId: string[] | undefined;
+
+        switch (serverType) {
+            case ServerType.NAVIDROME:
+            case ServerType.JELLYFIN:
+                songId = ctx.dataNodes?.map((node) => node.data.playlistItemId);
+                break;
+            case ServerType.SUBSONIC:
+                songId = ctx.dataNodes?.map((node) => node.rowIndex!.toString());
+                break;
+        }
 
         const confirm = () => {
             removeFromPlaylistMutation.mutate(
                 {
                     query: {
                         id: ctx.context.playlistId,
-                        songId,
+                        songId: songId || [],
                     },
                     serverId: ctx.data?.[0]?.serverId,
                 },
@@ -601,7 +610,19 @@ export const ContextMenuProvider = ({ children }: ContextMenuProviderProps) => {
     );
 
     const playbackType = usePlaybackType();
-    const { moveToBottomOfQueue, moveToTopOfQueue, removeFromQueue } = useQueueControls();
+    const { moveToNextOfQueue, moveToBottomOfQueue, moveToTopOfQueue, removeFromQueue } =
+        useQueueControls();
+
+    const handleMoveToNext = useCallback(() => {
+        const uniqueIds = ctx.dataNodes?.map((row) => row.data.uniqueId);
+        if (!uniqueIds?.length) return;
+
+        const playerData = moveToNextOfQueue(uniqueIds);
+
+        if (playbackType === PlaybackType.LOCAL) {
+            setQueueNext(playerData);
+        }
+    }, [ctx.dataNodes, moveToNextOfQueue, playbackType]);
 
     const handleMoveToBottom = useCallback(() => {
         const uniqueIds = ctx.dataNodes?.map((row) => row.data.uniqueId);
@@ -750,6 +771,12 @@ export const ContextMenuProvider = ({ children }: ContextMenuProviderProps) => {
                 leftIcon: <RiArrowDownLine size="1.1rem" />,
                 onClick: handleMoveToBottom,
             },
+            moveToNextOfQueue: {
+                id: 'moveToNext',
+                label: t('page.contextMenu.moveToNext', { postProcess: 'sentenceCase' }),
+                leftIcon: <RiArrowGoForwardLine size="1.1rem" />,
+                onClick: handleMoveToNext,
+            },
             moveToTopOfQueue: {
                 id: 'moveToTopOfQueue',
                 label: t('page.contextMenu.moveToTop', { postProcess: 'sentenceCase' }),
@@ -773,6 +800,12 @@ export const ContextMenuProvider = ({ children }: ContextMenuProviderProps) => {
                 label: t('page.contextMenu.addNext', { postProcess: 'sentenceCase' }),
                 leftIcon: <RiAddCircleFill size="1.1rem" />,
                 onClick: () => handlePlay(Play.NEXT),
+            },
+            playShuffled: {
+                id: 'playShuffled',
+                label: t('page.contextMenu.playShuffled', { postProcess: 'sentenceCase' }),
+                leftIcon: <RiShuffleFill size="1.1rem" />,
+                onClick: () => handlePlay(Play.SHUFFLE),
             },
             playSimilarSongs: {
                 id: 'playSimilarSongs',
@@ -862,7 +895,7 @@ export const ContextMenuProvider = ({ children }: ContextMenuProviderProps) => {
                     },
                 ],
                 id: 'setRating',
-                label: 'Set rating',
+                label: t('action.setRating', { postProcess: 'sentenceCase' }),
                 leftIcon: <RiStarFill size="1.1rem" />,
                 onClick: () => {},
                 rightIcon: <RiArrowRightSFill size="1.2rem" />,
@@ -890,6 +923,7 @@ export const ContextMenuProvider = ({ children }: ContextMenuProviderProps) => {
         handleDeselectAll,
         ctx.data,
         handleDownload,
+        handleMoveToNext,
         handleMoveToBottom,
         handleMoveToTop,
         handleSimilar,

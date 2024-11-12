@@ -1,16 +1,19 @@
-import { forwardRef, Fragment, Ref } from 'react';
+import { forwardRef, Fragment, Ref, useCallback, useMemo } from 'react';
 import { Group, Stack } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { generatePath, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { LibraryItem, ServerType } from '/@/renderer/api/types';
+import { AlbumDetailResponse, LibraryItem, ServerType } from '/@/renderer/api/types';
 import { Rating, Text } from '/@/renderer/components';
 import { useAlbumDetail } from '/@/renderer/features/albums/queries/album-detail-query';
 import { LibraryHeader, useSetRating } from '/@/renderer/features/shared';
 import { useContainerQuery } from '/@/renderer/hooks';
 import { AppRoute } from '/@/renderer/router/routes';
 import { useCurrentServer } from '/@/renderer/store';
-import { formatDateAbsolute, formatDurationString } from '/@/renderer/utils';
+import { formatDateAbsoluteUTC, formatDurationString } from '/@/renderer/utils';
+import { useSongChange } from '/@/renderer/hooks/use-song-change';
+import { queryKeys } from '/@/renderer/api/query-keys';
+import { queryClient } from '/@/renderer/lib/react-query';
 
 interface AlbumDetailHeaderProps {
     background: {
@@ -37,16 +40,48 @@ export const AlbumDetailHeader = forwardRef(
             ? t('page.albumDetail.released', { postProcess: 'sentenceCase' })
             : '♫';
 
+        const songIds = useMemo(() => {
+            return new Set(detailQuery.data?.songs?.map((song) => song.id));
+        }, [detailQuery.data?.songs]);
+
+        const handleSongChange = useCallback(
+            (id: string) => {
+                if (songIds.has(id)) {
+                    const queryKey = queryKeys.albums.detail(server?.id, { id: albumId });
+                    queryClient.setQueryData<AlbumDetailResponse | undefined>(
+                        queryKey,
+                        (previous) => {
+                            if (!previous) return undefined;
+
+                            return {
+                                ...previous,
+                                playCount: previous.playCount ? previous.playCount + 1 : 1,
+                            };
+                        },
+                    );
+                }
+            },
+            [albumId, server?.id, songIds],
+        );
+
+        useSongChange((ids, event) => {
+            if (event.event === 'play') {
+                handleSongChange(ids[0]);
+            }
+        }, detailQuery.data !== undefined);
+
         const metadataItems = [
             {
                 id: 'releaseDate',
                 value:
                     detailQuery?.data?.releaseDate &&
-                    `${releasePrefix} ${formatDateAbsolute(detailQuery?.data?.releaseDate)}`,
+                    `${releasePrefix} ${formatDateAbsoluteUTC(detailQuery?.data?.releaseDate)}`,
             },
             {
                 id: 'songCount',
-                value: `${detailQuery?.data?.songCount} songs`,
+                value: `${detailQuery?.data?.songCount} ${t('entity.track_other', {
+                    count: detailQuery?.data?.songCount as number,
+                })}`,
             },
             {
                 id: 'duration',
@@ -62,7 +97,7 @@ export const AlbumDetailHeader = forwardRef(
         ];
 
         if (originalDifferentFromRelease) {
-            const formatted = `♫ ${formatDateAbsolute(detailQuery!.data!.originalDate)}`;
+            const formatted = `♫ ${formatDateAbsoluteUTC(detailQuery!.data!.originalDate)}`;
             metadataItems.splice(0, 0, {
                 id: 'originalDate',
                 value: formatted,

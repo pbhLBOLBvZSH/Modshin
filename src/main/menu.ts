@@ -48,7 +48,7 @@ export default class MenuBuilder {
             label: 'Electron',
             submenu: [
                 {
-                    label: 'About ElectronReact',
+                    label: 'About Feishin',
                     selector: 'orderFrontStandardAboutPanel:',
                 },
                 { type: 'separator' },
@@ -56,7 +56,7 @@ export default class MenuBuilder {
                 { type: 'separator' },
                 {
                     accelerator: 'Command+H',
-                    label: 'Hide ElectronReact',
+                    label: 'Hide Feishin',
                     selector: 'hide:',
                 },
                 {
@@ -147,27 +147,27 @@ export default class MenuBuilder {
             submenu: [
                 {
                     click() {
-                        shell.openExternal('https://electronjs.org');
+                        shell.openExternal('https://github.com/jeffvli/feishin');
                     },
                     label: 'Learn More',
                 },
                 {
                     click() {
                         shell.openExternal(
-                            'https://github.com/electron/electron/tree/main/docs#readme',
+                            'https://github.com/jeffvli/feishin?tab=readme-ov-file#getting-started',
                         );
                     },
                     label: 'Documentation',
                 },
                 {
                     click() {
-                        shell.openExternal('https://www.electronjs.org/community');
+                        shell.openExternal('https://github.com/jeffvli/feishin/discussions');
                     },
                     label: 'Community Discussions',
                 },
                 {
                     click() {
-                        shell.openExternal('https://github.com/electron/electron/issues');
+                        shell.openExternal('https://github.com/jeffvli/feishin/issues');
                     },
                     label: 'Search Issues',
                 },
@@ -246,27 +246,27 @@ export default class MenuBuilder {
                 submenu: [
                     {
                         click() {
-                            shell.openExternal('https://electronjs.org');
+                            shell.openExternal('https://github.com/jeffvli/feishin');
                         },
                         label: 'Learn More',
                     },
                     {
                         click() {
                             shell.openExternal(
-                                'https://github.com/electron/electron/tree/main/docs#readme',
+                                'https://github.com/jeffvli/feishin?tab=readme-ov-file#getting-started',
                             );
                         },
                         label: 'Documentation',
                     },
                     {
                         click() {
-                            shell.openExternal('https://www.electronjs.org/community');
+                            shell.openExternal('https://github.com/jeffvli/feishin/discussions');
                         },
                         label: 'Community Discussions',
                     },
                     {
                         click() {
-                            shell.openExternal('https://github.com/electron/electron/issues');
+                            shell.openExternal('https://github.com/jeffvli/feishin/issues');
                         },
                         label: 'Search Issues',
                     },

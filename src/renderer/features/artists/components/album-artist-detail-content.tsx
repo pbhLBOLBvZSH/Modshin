@@ -111,18 +111,7 @@ export const AlbumArtistDetailContent = ({ background }: AlbumArtistDetailConten
             enabled: enabledItem.recentAlbums,
         },
         query: {
-            _custom: {
-                jellyfin: {
-                    ...(server?.type === ServerType.JELLYFIN
-                        ? { AlbumArtistIds: albumArtistId }
-                        : undefined),
-                },
-                navidrome: {
-                    ...(server?.type === ServerType.NAVIDROME
-                        ? { artist_id: albumArtistId, compilation: false }
-                        : undefined),
-                },
-            },
+            artistIds: [albumArtistId],
             limit: 15,
             sortBy: AlbumListSort.RELEASE_DATE,
             sortOrder: SortOrder.DESC,
@@ -133,21 +122,11 @@ export const AlbumArtistDetailContent = ({ background }: AlbumArtistDetailConten
 
     const compilationAlbumsQuery = useAlbumList({
         options: {
-            enabled: enabledItem.compilations,
+            enabled: enabledItem.compilations && server?.type !== ServerType.SUBSONIC,
         },
         query: {
-            _custom: {
-                jellyfin: {
-                    ...(server?.type === ServerType.JELLYFIN
-                        ? { ContributingArtistIds: albumArtistId }
-                        : undefined),
-                },
-                navidrome: {
-                    ...(server?.type === ServerType.NAVIDROME
-                        ? { artist_id: albumArtistId, compilation: true }
-                        : undefined),
-                },
-            },
+            artistIds: [albumArtistId],
+            compilation: true,
             limit: 15,
             sortBy: AlbumListSort.RELEASE_DATE,
             sortOrder: SortOrder.DESC,
@@ -255,7 +234,10 @@ export const AlbumArtistDetailContent = ({ background }: AlbumArtistDetailConten
             },
             {
                 data: compilationAlbumsQuery?.data?.items,
-                isHidden: !compilationAlbumsQuery?.data?.items?.length || !enabledItem.compilations,
+                isHidden:
+                    !compilationAlbumsQuery?.data?.items?.length ||
+                    !enabledItem.compilations ||
+                    server?.type === ServerType.SUBSONIC,
                 itemType: LibraryItem.ALBUM,
                 loading: compilationAlbumsQuery?.isLoading || compilationAlbumsQuery.isFetching,
                 order: itemOrder.compilations,
@@ -302,6 +284,7 @@ export const AlbumArtistDetailContent = ({ background }: AlbumArtistDetailConten
         recentAlbumsQuery?.data?.items,
         recentAlbumsQuery.isFetching,
         recentAlbumsQuery?.isLoading,
+        server?.type,
         t,
     ]);
 
@@ -568,8 +551,11 @@ export const AlbumArtistDetailContent = ({ background }: AlbumArtistDetailConten
                                     suppressLoadingOverlay
                                     suppressRowDrag
                                     columnDefs={topSongsColumnDefs}
+                                    context={{
+                                        itemType: LibraryItem.SONG,
+                                    }}
                                     enableCellChangeFlash={false}
-                                    getRowId={(data) => data.data.id}
+                                    getRowId={(data) => data.data.uniqueId}
                                     rowData={topSongs}
                                     rowHeight={60}
                                     rowSelection="multiple"

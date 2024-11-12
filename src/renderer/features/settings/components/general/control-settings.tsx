@@ -215,6 +215,13 @@ export const ControlSettings = () => {
                             }),
                             value: Play.LAST,
                         },
+                        {
+                            label: t('setting.playButtonBehavior', {
+                                context: 'optionPlayShuffled',
+                                postProcess: 'titleCase',
+                            }),
+                            value: Play.SHUFFLE,
+                        },
                     ]}
                     defaultValue={settings.playButtonBehavior}
                     onChange={(e) =>
@@ -367,28 +374,6 @@ export const ControlSettings = () => {
             }),
             isHidden: !isElectron(),
             title: t('setting.savePlayQueue', { postProcess: 'sentenceCase' }),
-        },
-        {
-            control: (
-                <Switch
-                    aria-label="Go to playlist songs page by default"
-                    defaultChecked={settings.defaultFullPlaylist}
-                    onChange={(e) =>
-                        setSettings({
-                            general: {
-                                ...settings,
-                                defaultFullPlaylist: e.currentTarget.checked,
-                            },
-                        })
-                    }
-                />
-            ),
-            description: t('setting.skipPlaylistPage', {
-                context: 'description',
-                postProcess: 'sentenceCase',
-            }),
-            isHidden: false,
-            title: t('setting.skipPlaylistPage', { postProcess: 'sentenceCase' }),
         },
         {
             control: (

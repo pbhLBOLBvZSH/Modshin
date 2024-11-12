@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef } from 'react';
 import {
+    useCurrentPlayer,
     useCurrentStatus,
     useCurrentTime,
     useLyricsSettings,
     usePlaybackType,
     usePlayerData,
     useSeeked,
+    useSetCurrentTime,
 } from '/@/renderer/store';
 import { PlaybackType, PlayerStatus } from '/@/renderer/types';
 import { LyricLine } from '/@/renderer/features/lyrics/lyric-line';
@@ -13,9 +15,11 @@ import isElectron from 'is-electron';
 import { PlayersRef } from '/@/renderer/features/player/ref/players-ref';
 import { FullLyricsMetadata, SynchronizedLyricsArray } from '/@/renderer/api/types';
 import styled from 'styled-components';
-import { useCenterControls } from '/@/renderer/features/player/hooks/use-center-controls';
+import { useScrobble } from '/@/renderer/features/player/hooks/use-scrobble';
 
 const mpvPlayer = isElectron() ? window.electron.mpvPlayer : null;
+const utils = isElectron() ? window.electron.utils : null;
+const mpris = isElectron() && utils?.isLinux() ? window.electron.mpris : null;
 
 const SynchronizedLyricsContainer = styled.div<{ $gap: number }>`
     display: flex;
@@ -51,6 +55,7 @@ const SynchronizedLyricsContainer = styled.div<{ $gap: number }>`
 
 export interface SynchronizedLyricsProps extends Omit<FullLyricsMetadata, 'lyrics'> {
     lyrics: SynchronizedLyricsArray;
+    translatedLyrics?: string | null;
 }
 
 export const SynchronizedLyrics = ({
@@ -59,6 +64,7 @@ export const SynchronizedLyrics = ({
     name,
     remote,
     source,
+    translatedLyrics,
 }: SynchronizedLyricsProps) => {
     const playersRef = PlayersRef;
     const status = useCurrentStatus();
@@ -66,7 +72,25 @@ export const SynchronizedLyrics = ({
     const playerData = usePlayerData();
     const now = useCurrentTime();
     const settings = useLyricsSettings();
-    const centerControls = useCenterControls({ playersRef });
+    const currentPlayer = useCurrentPlayer();
+    const currentPlayerRef =
+        currentPlayer === 1 ? playersRef.current?.player1 : playersRef.current?.player2;
+    const setCurrentTime = useSetCurrentTime();
+    const { handleScrobbleFromSeek } = useScrobble();
+
+    const handleSeek = useCallback(
+        (time: number) => {
+            if (playbackType === PlaybackType.LOCAL && mpvPlayer) {
+                mpvPlayer.seekTo(time);
+            } else {
+                setCurrentTime(time, true);
+                handleScrobbleFromSeek(time);
+                mpris?.updateSeek(time);
+                currentPlayerRef?.seekTo(time);
+            }
+        },
+        [currentPlayerRef, handleScrobbleFromSeek, playbackType, setCurrentTime],
+    );
 
     const seeked = useSeeked();
 
@@ -350,16 +374,26 @@ export const SynchronizedLyrics = ({
                 />
             )}
             {lyrics.map(([time, text], idx) => (
-                <LyricLine
-                    key={idx}
-                    alignment={settings.alignment}
-                    animationDuration={lyricLengthInMs.current.toString()}
-                    className="lyric-line synchronized"
-                    fontSize={settings.fontSize}
-                    id={`lyric-${idx}`}
-                    text={text}
-                    onClick={() => centerControls.handleSeekSlider(time / 1000)}
-                />
+                <div key={idx}>
+                    <LyricLine
+                        alignment={settings.alignment}
+                        animationDuration={lyricLengthInMs.current.toString()}
+                        className="lyric-line synchronized"
+                        fontSize={settings.fontSize}
+                        id={`lyric-${idx}`}
+                        text={text}
+                        onClick={() => handleSeek(time / 1000)}
+                    />
+                    {translatedLyrics && (
+                        <LyricLine
+                            alignment={settings.alignment}
+                            className="lyric-line synchronized translation"
+                            fontSize={settings.fontSize * 0.8}
+                            text={translatedLyrics.split('\n')[idx]}
+                            onClick={() => handleSeek(time / 1000)}
+                        />
+                    )}
+                </div>
             ))}
         </SynchronizedLyricsContainer>
     );

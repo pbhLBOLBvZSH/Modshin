@@ -99,7 +99,7 @@ const normalizeSong = (
             item.rgAlbumGain || item.rgTrackGain
                 ? { album: item.rgAlbumGain, track: item.rgTrackGain }
                 : null,
-        genres: item.genres?.map((genre) => ({
+        genres: (item.genres || []).map((genre) => ({
             id: genre.id,
             imageUrl: null,
             itemType: LibraryItem.GENRE,
@@ -121,7 +121,7 @@ const normalizeSong = (
         playlistItemId,
         releaseDate: (item.releaseDate
             ? new Date(item.releaseDate)
-            : new Date(item.year, 0, 1)
+            : new Date(Date.UTC(item.year, 0, 1))
         ).toISOString(),
         releaseYear: String(item.year),
         serverId: server?.id || 'unknown',
@@ -163,7 +163,7 @@ const normalizeAlbum = (
         comment: item.comment || null,
         createdAt: item.createdAt.split('T')[0],
         duration: item.duration * 1000 || null,
-        genres: item.genres?.map((genre) => ({
+        genres: (item.genres || []).map((genre) => ({
             id: genre.id,
             imageUrl: null,
             itemType: LibraryItem.GENRE,
@@ -222,7 +222,7 @@ const normalizeAlbumArtist = (
         backgroundImageUrl: null,
         biography: item.biography || null,
         duration: null,
-        genres: item.genres?.map((genre) => ({
+        genres: (item.genres || []).map((genre) => ({
             id: genre.id,
             imageUrl: null,
             itemType: LibraryItem.GENRE,

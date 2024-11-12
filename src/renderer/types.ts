@@ -69,6 +69,8 @@ export const toServerType = (value?: string): ServerType | null => {
             return ServerType.JELLYFIN;
         case ServerType.NAVIDROME:
             return ServerType.NAVIDROME;
+        case ServerType.SUBSONIC:
+            return ServerType.SUBSONIC;
         default:
             return null;
     }
@@ -109,6 +111,7 @@ export enum Play {
     LAST = 'last',
     NEXT = 'next',
     NOW = 'now',
+    SHUFFLE = 'shuffle',
 }
 
 export enum CrossfadeStyle {
@@ -235,6 +238,16 @@ export enum AuthState {
     LOADING = 'loading',
     VALID = 'valid',
 }
+
+export type WebAudio = {
+    context: AudioContext;
+    gain: GainNode;
+};
+
+export type WebAudio = {
+    context: AudioContext;
+    gain: GainNode;
+};
 
 export type WebAudio = {
     analyzer: AnalyserNode;

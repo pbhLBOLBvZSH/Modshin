@@ -238,7 +238,6 @@ export interface SettingsState {
         albumBackgroundBlur: number;
         artistItems: SortableItem<ArtistItem>[];
         buttonSize: number;
-        defaultFullPlaylist: boolean;
         disabledContextMenu: { [k in ContextMenuItemType]?: boolean };
         doubleClickQueueAll: boolean;
         externalLinks: boolean;
@@ -247,6 +246,7 @@ export interface SettingsState {
         homeFeature: boolean;
         homeItems: SortableItem<HomeItem>[];
         language: string;
+        lastfmApiKey: string;
         nativeAspectRatio: boolean;
         passwordStore?: string;
         playButtonBehavior: Play;
@@ -289,6 +289,9 @@ export interface SettingsState {
         showMatch: boolean;
         showProvider: boolean;
         sources: LyricSource[];
+        translationApiKey: string;
+        translationApiProvider: string | null;
+        translationTargetLanguage: string | null;
     };
     modshin: {
         autoPlay: boolean;
@@ -339,6 +342,7 @@ export interface SettingsState {
         exitToTray: boolean;
         minimizeToTray: boolean;
         startMinimized: boolean;
+        tray: boolean;
         windowBarStyle: Platform;
     };
 }
@@ -392,7 +396,6 @@ const initialState: SettingsState = {
         albumBackgroundBlur: 6,
         artistItems,
         buttonSize: 20,
-        defaultFullPlaylist: true,
         disabledContextMenu: {},
         doubleClickQueueAll: true,
         externalLinks: true,
@@ -401,6 +404,7 @@ const initialState: SettingsState = {
         homeFeature: true,
         homeItems,
         language: 'en',
+        lastfmApiKey: '',
         nativeAspectRatio: false,
         passwordStore: undefined,
         playButtonBehavior: Play.NOW,
@@ -474,6 +478,9 @@ const initialState: SettingsState = {
         showMatch: true,
         showProvider: true,
         sources: [],
+        translationApiKey: '',
+        translationApiProvider: '',
+        translationTargetLanguage: 'en',
     },
     modshin: {
         autoPlay: true,
@@ -689,6 +696,7 @@ const initialState: SettingsState = {
         exitToTray: false,
         minimizeToTray: false,
         startMinimized: false,
+        tray: true,
         windowBarStyle: platformDefaultWindowBarStyle,
     },
 };

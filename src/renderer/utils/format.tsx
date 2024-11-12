@@ -1,13 +1,29 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import utc from 'dayjs/plugin/utc';
 import formatDuration from 'format-duration';
 import type { Album, AlbumArtist, Song } from '/@/renderer/api/types';
 import { Rating } from '/@/renderer/components/rating';
 
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
+
+const FORMATS: Record<number, string> = Object.freeze({
+    0: 'YYYY',
+    1: 'MMM YYYY',
+    2: 'MMM D, YYYY',
+});
+
+const getDateFormat = (key: string): string => {
+    const dashes = Math.min(key.split('-').length - 1, 2);
+    return FORMATS[dashes];
+};
 
 export const formatDateAbsolute = (key: string | null) =>
-    key ? dayjs(key).format('MMM D, YYYY') : '';
+    key ? dayjs(key).format(getDateFormat(key)) : '';
+
+export const formatDateAbsoluteUTC = (key: string | null) =>
+    key ? dayjs.utc(key).format(getDateFormat(key)) : '';
 
 export const formatDateRelative = (key: string | null) => (key ? dayjs(key).fromNow() : '');
 

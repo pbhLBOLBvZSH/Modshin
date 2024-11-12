@@ -6,6 +6,7 @@ import { useLyricsSettings } from '/@/renderer/store';
 
 export interface UnsynchronizedLyricsProps extends Omit<FullLyricsMetadata, 'lyrics'> {
     lyrics: string;
+    translatedLyrics?: string | null;
 }
 
 const UnsynchronizedLyricsContainer = styled.div<{ $gap: number }>`
@@ -45,11 +46,16 @@ export const UnsynchronizedLyrics = ({
     name,
     remote,
     source,
+    translatedLyrics,
 }: UnsynchronizedLyricsProps) => {
     const settings = useLyricsSettings();
     const lines = useMemo(() => {
         return lyrics.split('\n');
     }, [lyrics]);
+
+    const translatedLines = useMemo(() => {
+        return translatedLyrics ? translatedLyrics.split('\n') : [];
+    }, [translatedLyrics]);
 
     return (
         <UnsynchronizedLyricsContainer
@@ -75,15 +81,24 @@ export const UnsynchronizedLyrics = ({
                 />
             )}
             {lines.map((text, idx) => (
-                <LyricLine
-                    key={idx}
-                    alignment={settings.alignment}
-                    animationDuration="0"
+                <div key={idx}>
+                    <LyricLine
+                        alignment={settings.alignment}
+                        animationDuration="0"
                     className="lyric-line unsynchronized"
-                    fontSize={settings.fontSizeUnsync}
-                    id={`lyric-${idx}`}
-                    text={text}
-                />
+                        fontSize={settings.fontSizeUnsync}
+                        id={`lyric-${idx}`}
+                        text={text}
+                    />
+                    {translatedLines[idx] && (
+                        <LyricLine
+                            alignment={settings.alignment}
+                            className="lyric-line unsynchronized translation"
+                            fontSize={settings.fontSizeUnsync * 0.8}
+                            text={translatedLines[idx]}
+                        />
+                    )}
+                </div>
             ))}
         </UnsynchronizedLyricsContainer>
     );

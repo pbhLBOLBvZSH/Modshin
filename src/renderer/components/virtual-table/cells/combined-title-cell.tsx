@@ -7,11 +7,12 @@ import { generatePath } from 'react-router';
 import { Link } from 'react-router-dom';
 import { SimpleImg } from 'react-simple-img';
 import styled from 'styled-components';
-import type { AlbumArtist, Artist } from '/@/renderer/api/types';
+import { AlbumArtist, Artist } from '/@/renderer/api/types';
 import { Text } from '/@/renderer/components/text';
 import { AppRoute } from '/@/renderer/router/routes';
 import { Skeleton } from '/@/renderer/components/skeleton';
 import { SEPARATOR_STRING } from '/@/renderer/api/utils';
+import { ListCoverControls } from '/@/renderer/components/virtual-table/cells/combined-title-cell-controls';
 
 const CellContainer = styled(motion.div)<{ height: number }>`
     display: grid;
@@ -24,9 +25,20 @@ const CellContainer = styled(motion.div)<{ height: number }>`
     max-width: 100%;
     height: 100%;
     letter-spacing: 0.5px;
+
+    .card-controls {
+        opacity: 0;
+    }
+
+    &:hover {
+        .card-controls {
+            opacity: 1;
+        }
+    }
 `;
 
 const ImageWrapper = styled.div`
+    position: relative;
     display: flex;
     grid-area: image;
     align-items: center;
@@ -48,7 +60,13 @@ const StyledImage = styled(SimpleImg)`
     }
 `;
 
-export const CombinedTitleCell = ({ value, rowIndex, node }: ICellRendererParams) => {
+export const CombinedTitleCell = ({
+    value,
+    rowIndex,
+    node,
+    context,
+    data,
+}: ICellRendererParams) => {
     const artists = useMemo(() => {
         if (!value) return null;
         return value.artists?.length ? value.artists : value.albumArtists;
@@ -102,6 +120,12 @@ export const CombinedTitleCell = ({ value, rowIndex, node }: ICellRendererParams
                         />
                     </Center>
                 )}
+                <ListCoverControls
+                    context={context}
+                    itemData={value}
+                    itemType={context.itemType}
+                    uniqueId={data?.uniqueId}
+                />
             </ImageWrapper>
             <MetadataWrapper>
                 <Text

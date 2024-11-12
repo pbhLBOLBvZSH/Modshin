@@ -11,7 +11,7 @@
         "skip_back": "reculer",
         "favorite": "favori",
         "next": "suivant",
-        "shuffle": "aléatoire",
+        "shuffle": "lecture aléatoire",
         "playbackFetchNoResults": "aucune chansons trouvées",
         "playbackFetchInProgress": "chargement des chansons…",
         "addNext": "ajouter ensuite",
@@ -29,13 +29,14 @@
         "skip_forward": "avancer",
         "pause": "pause",
         "unfavorite": "retirer des favoris",
-        "playSimilarSongs": "jouer des chansons similaires"
+        "playSimilarSongs": "jouer des chansons similaires",
+        "viewQueue": "voir la file d'attente"
     },
     "action": {
         "editPlaylist": "éditer $t(entity.playlist_one)",
         "goToPage": "aller à la page",
         "moveToTop": "déplacer en haut",
-        "clearQueue": "effacer la liste de lecture",
+        "clearQueue": "vider la file d'attente",
         "addToFavorites": "ajouter aux $t(entity.favorite_other)",
         "addToPlaylist": "ajouter à $t(entity.playlist_one)",
         "createPlaylist": "créer $t(entity.playlist_one)",
@@ -65,7 +66,7 @@
         "edit": "éditer",
         "favorite": "favoris",
         "left": "gauche",
-        "save": "sauvegarder",
+        "save": "enregistrer",
         "right": "droite",
         "currentSong": "$t(entity.track_one) actuelle",
         "collapse": "réduire",
@@ -92,7 +93,7 @@
         "no": "non",
         "owner": "propriétaire",
         "enable": "activer",
-        "clear": "effacer",
+        "clear": "vider",
         "forward": "avancer",
         "delete": "supprimer",
         "cancel": "annuler",
@@ -106,7 +107,7 @@
         "filters": "filtres",
         "create": "créer",
         "bitrate": "bitrate",
-        "saveAndReplace": "sauvegarder et remplacer",
+        "saveAndReplace": "enregistrer et remplacer",
         "action_one": "action",
         "action_many": "actions",
         "action_other": "actions",
@@ -124,12 +125,12 @@
         "none": "aucun",
         "menu": "menu",
         "restartRequired": "redémarrage requis",
-        "previousSong": "précédant $t(entity.track_one)",
+        "previousSong": "$t(entity.track_one) précédente",
         "noResultsFromQuery": "la requête n'a retourné aucun résultat",
         "quit": "quitter",
         "expand": "étendre",
         "search": "recherche",
-        "saveAs": "sauvegarder en tant que",
+        "saveAs": "enregistrer en tant que",
         "disc": "disque",
         "yes": "oui",
         "random": "aléatoire",
@@ -145,35 +146,36 @@
         "reload": "recharger",
         "trackGain": "gain de la piste",
         "trackPeak": "crête de la piste",
-        "codec": "codec"
+        "codec": "codec",
+        "translation": "traduction"
     },
     "error": {
         "remotePortWarning": "redémarrer le serveur pour appliquer le nouveau port",
         "systemFontError": "une erreur s’est produite lors de la tentative d’obtenir les polices système",
         "playbackError": "une erreur s'est produite lors de la tentative de lecture du média",
-        "endpointNotImplementedError": "endpoint {{endpoint}} n'est pas implémenté pour {{serverType}}",
+        "endpointNotImplementedError": "l'endpoint {{endpoint}} n'est pas implémenté pour {{serverType}}",
         "remotePortError": "une erreur s'est produite lors de la tentative de définir le port du serveur distant",
         "serverRequired": "serveur requis",
-        "authenticationFailed": "l'authentification à échoué",
+        "authenticationFailed": "l'authentification a échoué",
         "apiRouteError": "incapable d’acheminer la demande",
         "genericError": "une erreur s'est produite",
         "credentialsRequired": "identifiants requis",
         "sessionExpiredError": "votre session a expiré",
         "remoteEnableError": "une erreur s'est produite lors de la tentative de $t(common.enable) le serveur distant",
         "localFontAccessDenied": "accès refusé aux polices locales",
-        "serverNotSelectedError": "aucun serveur sélectionner",
+        "serverNotSelectedError": "aucun serveur sélectionné",
         "remoteDisableError": "une erreur s'est produite lors de la tentative de $t(common.disable) le serveur distant",
         "mpvRequired": "MPV requis",
         "audioDeviceFetchError": "une erreur s’est produite lors de la tentative d’obtenir les périphériques audio",
         "invalidServer": "serveur invalide",
-        "loginRateError": "trop de tentative de connexion, merci d'essayer dans quelque secondes",
+        "loginRateError": "trop de tentative de connexion, merci de réessayer dans quelques secondes",
         "openError": "impossible d'ouvrir le fichier",
         "networkError": "une erreur de réseau est survenue",
         "badAlbum": "vous voyez cette page parce que cette chanson ne fait pas parti d'un album. vous rencontrez probablement cette erreur si vous avez une chanson qui n'est pas dans votre répertoire de musique. jellyfin gère les chansons uniquement si elles sont dans un sous-dossier, qui est lui-même dans un dossier \"Musique(s)\"."
     },
     "filter": {
         "mostPlayed": "plus joués",
-        "playCount": "nombre d'écoutes",
+        "playCount": "nombre d'écoute",
         "isCompilation": "est une compilation",
         "recentlyPlayed": "récemment joué",
         "isRated": "est noté",
@@ -190,7 +192,7 @@
         "path": "chemin",
         "favorited": "favoris",
         "isRecentlyPlayed": "est récemment joué",
-        "isFavorited": "est favoris",
+        "isFavorited": "est favori",
         "bpm": "bpm",
         "releaseYear": "année de sortie",
         "disc": "disque",
@@ -198,7 +200,7 @@
         "songCount": "nombre de chansons",
         "duration": "durée",
         "random": "aléatoire",
-        "lastPlayed": "dernière joué",
+        "lastPlayed": "dernier joué",
         "toYear": "à l'année",
         "fromYear": "depuis l'année",
         "criticRating": "note des critiques",
@@ -244,11 +246,14 @@
                 "lyricSize": "Taille des paroles",
                 "lyricGap": "espacement des lettres",
                 "dynamicIsImage": "activer l'image d'arrière-plan",
-                "dynamicImageBlur": "intensité de flou sur image d'arrière-plan"
+                "dynamicImageBlur": "intensité de flou sur image d'arrière-plan",
+                "lyricOffset": "paroles décalées (ms)"
             },
             "upNext": "à suivre",
             "lyrics": "paroles",
-            "related": "similaire"
+            "related": "similaire",
+            "visualizer": "visualisateur",
+            "noLyrics": "aucune parole trouvée"
         },
         "appMenu": {
             "selectServer": "sélectionner le serveur",
@@ -271,13 +276,15 @@
         },
         "albumDetail": {
             "moreFromArtist": "plus de $t(entity.artist_one)",
-            "moreFromGeneric": "plus de {{item}}"
+            "moreFromGeneric": "plus de {{item}}",
+            "released": "publié"
         },
         "setting": {
             "generalTab": "général",
             "hotkeysTab": "raccourcis",
             "windowTab": "fenêtre",
-            "playbackTab": "lecteur"
+            "playbackTab": "lecteur",
+            "advanced": "avancé"
         },
         "globalSearch": {
             "commands": {
@@ -306,7 +313,9 @@
             "removeFromQueue": "$t(action.removeFromQueue)",
             "shareItem": "partager un élément",
             "playSimilarSongs": "$t(player.playSimilarSongs)",
-            "showDetails": "obtenir des informations"
+            "showDetails": "obtenir des informations",
+            "download": "télécharger",
+            "playShuffled": "$t(player.shuffle)"
         },
         "albumArtistList": {
             "title": "$t(entity.albumArtist_other)"
@@ -344,6 +353,17 @@
             "copyPath": "copier le chemin dans le presse-papiers",
             "openFile": "afficher la piste dans le gestionnaire de fichiers",
             "copiedPath": "chemin copié avec succès"
+        },
+        "playlist": {
+            "reorder": "le tri n'est possible que lorsque l'on trie par identifiant"
+        },
+        "manageServers": {
+            "serverDetails": "détails du serveur",
+            "removeServer": "supprimer le serveur",
+            "url": "URL du serveur",
+            "title": "gérer les serveurs",
+            "username": "nom d'utilisateur",
+            "editServerDetailsTooltip": "modifier les détails du serveur"
         }
     },
     "setting": {
@@ -530,7 +550,46 @@
         "playerAlbumArtResolution_description": "la résolution pour l'aperçu de la pochette d'album agrandie du lecteur. plus grand le rend plus net, mais peut ralentir le chargement. la valeur par défaut est 0 (automatique)",
         "homeConfiguration_description": "configurer quels éléments sont affichés sur la page d'accueil, et dans quel ordre",
         "startMinimized": "démarrer l'application en mode réduit",
-        "genreBehavior_description": "détermine si cliquer sur un genre ouvre par défaut la liste des pistes ou des albums"
+        "genreBehavior_description": "détermine si cliquer sur un genre ouvre par défaut la liste des pistes ou des albums",
+        "transcode": "activer le transcodage",
+        "transcode_description": "permet le transcodage vers différents formats",
+        "transcodeBitrate_description": "sélectionne le débit du transcodage. 0 signifie que le serveur choisit",
+        "transcodeFormat_description": "sélectionne le format du transcodage. laisser vide pour laisser le serveur décider",
+        "volumeWidth": "largeur de la barre de volume",
+        "volumeWidth_description": "la largeur de la barre de volume",
+        "customCssEnable": "activer le css personnalisé",
+        "customCssEnable_description": "permet d'écrire du css personnalisé.",
+        "customCssNotice": "Attention : bien qu'il y ait un certain assainissement (blocage de url() et de content :), l'utilisation de CSS personnalisé peut toujours présenter des risques en modifiant l'interface.",
+        "customCss": "css personnalisé",
+        "webAudio": "utiliser l'audio web",
+        "transcodeBitrate": "débit binaire du transcodage",
+        "transcodeFormat": "format de transcodage",
+        "webAudio_description": "utiliser l'audio web. cela permet d'utiliser des fonctions avancées comme le replaygain. désactivez si vous rencontrez d'autres problèmes",
+        "artistConfiguration": "page de configuration de l'artiste de l'album",
+        "artistConfiguration_description": "configurer les éléments et l'ordre à afficher, sur la page de l'artiste de l'album",
+        "doubleClickBehavior": "mettre en file d'attente toutes les pistes recherchées lors d'un double clic",
+        "contextMenu": "configuration du menu contexte (clic droit)",
+        "contextMenu_description": "permet de masquer les éléments qui s'affichent dans le menu lorsque vous cliquez avec le bouton droit de la souris sur un élément. les éléments qui ne sont pas cochés seront masqués",
+        "albumBackground": "image d'arrière-plan de l'album",
+        "albumBackground_description": "ajoute une image d'arrière-plan pour les pages de l'album contenant les illustrations de l'album",
+        "albumBackgroundBlur_description": "ajuste le niveau de flou appliqué à l'image d'arrière-plan de l'album",
+        "playButtonBehavior_optionPlayShuffled": "$t(player.shuffle)",
+        "playerbarOpenDrawer": "basculement plein écran de la barre de lecteur",
+        "playerbarOpenDrawer_description": "permet de cliquer sur la barre du lecteur pour ouvrir le lecteur plein écran",
+        "translationApiProvider": "fournisseur d'api de traduction",
+        "discordListening": "afficher le statut d'écoute",
+        "discordListening_description": "afficher le statut comme étant en écoute au lieu de lecture",
+        "translationApiKey_description": "clé api à utiliser pour traduire les paroles (ne prend en charge que les points de terminaison de service globaux)",
+        "translationTargetLanguage": "traduction langue cible",
+        "trayEnabled": "montrer le plateau",
+        "translationApiProvider_description": "le fournisseur d'api à utiliser pour la traduction des paroles",
+        "customCss_description": "contenu css personnalisé. Remarque : le contenu et les URL distantes sont des propriétés non autorisées. Un aperçu de votre contenu est affiché ci-dessous. Des champs supplémentaires que vous n'avez pas définis sont présents en raison de la vérification.",
+        "translationApiKey": "clé api de traduction",
+        "translationTargetLanguage_description": "langue cible pour la traduction des paroles",
+        "transcodeNote": "prend effet après 1 (web) - 2 (mpv) chansons",
+        "trayEnabled_description": "afficher ou masquer l'icône et le menu de la barre d'état système. si désactivé, désactive également la réduction et la sortie vers la barre d'état système",
+        "doubleClickBehavior_description": "si vrai, toutes les pistes correspondantes dans une recherche de piste seront mises en file d'attente. sinon, seule celle sur laquelle vous avez cliqué sera mise en file d'attente",
+        "albumBackgroundBlur": "taille du flou de l'image d'arrière-plan de l'album"
     },
     "form": {
         "deletePlaylist": {
@@ -574,7 +633,9 @@
             "input_optionMatchAny": "correspondre à n'importe quel"
         },
         "editPlaylist": {
-            "title": "modifier $t(entity.playlist_one)"
+            "title": "modifier $t(entity.playlist_one)",
+            "publicJellyfinNote": "Jellyfin n'indique pas si une playlist est publique ou non. Si vous souhaitez que cette playlist reste publique, veuillez sélectionner l'entrée suivante",
+            "success": "$t(entity.playlist_one) mis à jour avec succès"
         },
         "lyricSearch": {
             "title": "rechercher parole",
@@ -636,7 +697,13 @@
         "genreWithCount_other": "{{count}} genres",
         "trackWithCount_one": "{{count}} piste",
         "trackWithCount_many": "{{count}} pistes",
-        "trackWithCount_other": "{{count}} pistes"
+        "trackWithCount_other": "{{count}} pistes",
+        "play_one": "{{count}} écouter",
+        "play_many": "{{count}} écoute",
+        "play_other": "{{count}} écoute",
+        "song_one": "chanson",
+        "song_many": "chansons",
+        "song_other": "chansons"
     },
     "table": {
         "config": {
@@ -647,7 +714,8 @@
                 "gap": "$t(common.gap)",
                 "size": "$t(common.size)",
                 "itemGap": "écart entre les éléments (en pixel)",
-                "itemSize": "taille des élements (en pixel)"
+                "itemSize": "taille des élements (en pixel)",
+                "followCurrentSong": "suivre la chanson actuelle"
             },
             "view": {
                 "table": "liste",
