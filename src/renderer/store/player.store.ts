@@ -1014,8 +1014,6 @@ export const usePlayerStore = create<PlayerSlice>()(
                                 state.queue.default = newQueue;
                                 state.queue.shuffled = newShuffledQueue;
 
-                                for (let i = 0; i < removed.length; i++) if (removed[i].isAuto) state.current.autoPlayQueueSize -= 1;
-
                                 if (isCurrentSongRemoved) {
                                     const newPosition = Math.min(
                                         newQueue.length - 1,

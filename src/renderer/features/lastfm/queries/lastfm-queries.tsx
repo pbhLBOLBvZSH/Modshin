@@ -1,16 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
-import { SimilarSongsQuery, QueueSong } from '/@/renderer/api/types';
-import { QueryHookArgs } from '/@/renderer/lib/react-query';
-import { getServerById, modshinSettings } from '/@/renderer/store';
-import { queryKeys } from '/@/renderer/api/query-keys';
-import { api } from '/@/renderer/api';
+import { modshinSettings } from '/@/renderer/store';
 
 export const getPlayCountWorld = (song: QueueSong) => {
     const settings = modshinSettings();
     if (settings.lastfmApiKey.length === 0 || song.artistName == undefined || song.name == undefined) return {pretty: "?", raw:0};
     console.log('Fetching play count for:', song);
 
-    const formatNumber = (num) => {
+    const formatNumber = (num: number) => {
         if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
         if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
         if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';

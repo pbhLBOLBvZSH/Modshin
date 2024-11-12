@@ -113,7 +113,7 @@ export const AudioPlayer = forwardRef(
         const [isTransitioning, setIsTransitioning] = useState(false);
         const audioDeviceId = useSettingsStore((state) => state.playback.audioDeviceId);
         const playback = useSettingsStore((state) => state.playback.mpvProperties);
-        const useWebAudio = useSettingsStore((state) => state.playback.webAudio);
+        const useWebAudiox = useSettingsStore((state) => state.playback.webAudio);
         const { resetSampleRate } = useSettingsStoreActions();
         const playbackSpeed = useSpeed();
         const { transcode } = usePlaybackSettings();
@@ -178,7 +178,7 @@ export const AudioPlayer = forwardRef(
         );
 
         useEffect(() => {
-            if (useWebAudio && 'AudioContext' in window) {
+            if (useWebAudiox && 'AudioContext' in window) {
                 let context: AudioContext;
 
                 try {

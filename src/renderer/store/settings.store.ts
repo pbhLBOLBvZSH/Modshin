@@ -1,3 +1,4 @@
+/* stylelint-disable CssSyntaxError */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ColDef } from '@ag-grid-community/core';
